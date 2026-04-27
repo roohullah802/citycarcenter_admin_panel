@@ -23,7 +23,7 @@ export default function ComplaintsPage() {
       cell: ({ row }: any) => (
         <div className="flex flex-col">
           <Link href={`/dashboard/users/${row.original.userId?._id}`} className="text-brand-400 hover:text-brand-300 font-bold transition-colors leading-none">
-            {row.original.userId?.username || 'Unknown User'}
+            {row.original.userId?.userName || 'Unknown User'}
           </Link>
           <span className="text-[10px] text-surface-500 font-medium mt-1 uppercase tracking-wider">{row.original.userId?.email || 'No Email'}</span>
         </div>
