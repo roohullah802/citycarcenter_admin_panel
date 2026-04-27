@@ -14,20 +14,25 @@ export default function ComplaintsPage() {
       const res = await api.get('/admin/complaints')
       return res.data.complains
     },
-  })
+  });
+
 
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: 'userId.username',
       header: 'Reported By',
-      cell: ({ row }: any) => (
-        <div className="flex flex-col">
-          <Link href={`/dashboard/users/${row.original.userId?._id}`} className="text-brand-400 hover:text-brand-300 font-bold transition-colors leading-none">
-            {row.original.userId?.userName || 'Unknown User'}
-          </Link>
-          <span className="text-[10px] text-surface-500 font-medium mt-1 uppercase tracking-wider">{row.original.userId?.email || 'No Email'}</span>
-        </div>
-      ),
+      cell: ({ row }: any) => {
+        console.log("row", row.original.userId);
+
+        return (
+          <div className="flex flex-col">
+            <Link href={`/dashboard/users/${row.original.userId?._id}`} className="text-brand-400 hover:text-brand-300 font-bold transition-colors leading-none">
+              {row.original.userId?.userName || 'Unknown User'}
+            </Link>
+            <span className="text-[10px] text-surface-500 font-medium mt-1 uppercase tracking-wider">{row.original.userId?.email || 'No Email'}</span>
+          </div>
+        )
+      }
     },
     {
       accessorKey: 'description',
