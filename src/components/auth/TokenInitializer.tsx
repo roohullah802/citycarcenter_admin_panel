@@ -2,7 +2,7 @@
 
 import { useAuth } from '@clerk/nextjs'
 import { useEffect } from 'react'
-import { api } from '@/lib/axios'
+import { setAuthToken } from '@/lib/axios'
 
 export function TokenInitializer() {
   const { getToken } = useAuth()
@@ -11,17 +11,16 @@ export function TokenInitializer() {
     const initToken = async () => {
       try {
         const token = await getToken()
-        if (token) {
-          api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-        }
+        console.log("token ", token);
+
+        setAuthToken(token)
       } catch (error) {
         console.error('Failed to initialize auth token:', error)
       }
     }
 
     initToken()
-    
-    // Refresh token every 50 seconds (Clerk tokens expire every 60s usually)
+
     const interval = setInterval(initToken, 50000)
     return () => clearInterval(interval)
   }, [getToken])
