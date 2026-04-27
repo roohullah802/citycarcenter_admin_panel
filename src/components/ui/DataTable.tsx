@@ -18,12 +18,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-  })
+  const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel(), getPaginationRowModel: getPaginationRowModel() })
 
   return (
     <div className="space-y-4">
@@ -42,9 +37,9 @@ export function DataTable<TData, TValue>({
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </th>
                     )
                   })}
@@ -76,7 +71,7 @@ export function DataTable<TData, TValue>({
           </table>
         </div>
       </div>
-      
+
       <div className="flex items-center justify-between px-2">
         <div className="text-xs font-semibold text-surface-500 uppercase tracking-wider">
           Page {table.getState().pagination.pageIndex + 1} <span className="mx-1 opacity-50">/</span> {table.getPageCount()}

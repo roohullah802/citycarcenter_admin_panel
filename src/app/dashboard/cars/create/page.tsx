@@ -8,10 +8,40 @@ import { Loader2, ArrowLeft, X, Plus, Info, Zap, LayoutPanelTop, Image as ImageI
 import Link from 'next/link'
 import { ImageUploader } from '@/components/cars/ImageUploader'
 
+interface CarFormValues {
+  brand: string;
+  modelName: string;
+  year: number;
+  color: string;
+  price: number;
+  passengers: number;
+  doors: number;
+  airCondition: boolean;
+  maxPower: number;
+  mph: number;
+  topSpeed: number;
+  available: boolean;
+  tax: number;
+  weeklyRate: number;
+  pricePerDay: number;
+  initialMileage: number;
+  allowedMilleage: number;
+  fuelType: 'petrol' | 'diesel' | 'electric' | 'hybrid';
+  transmission: 'manual' | 'automatic';
+  description: string;
+}
+
 export default function CreateCarPage() {
   const router = useRouter()
   const { createCar } = useCars()
-  const { register, handleSubmit, formState: { errors } } = useForm()
+  const { register, handleSubmit, formState: { errors } } = useForm<CarFormValues>({
+    defaultValues: {
+      airCondition: false,
+      fuelType: 'petrol',
+      transmission: 'automatic',
+      available: true
+    }
+  })
   
   const [images, setImages] = useState<string[]>([])
   const [brandImage, setBrandImage] = useState<string>('')
@@ -127,11 +157,19 @@ export default function CreateCarPage() {
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Fuel System</label>
-              <input {...register('fuelType', { required: true })} placeholder="Petrol" className="block w-full rounded-xl border border-surface-800 bg-surface-900/50 py-3 px-4 text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all" />
+              <select {...register('fuelType', { required: true })} className="block w-full rounded-xl border border-surface-800 bg-surface-900/50 py-3 px-4 text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all">
+                <option value="petrol">Petrol</option>
+                <option value="diesel">Diesel</option>
+                <option value="electric">Electric</option>
+                <option value="hybrid">Hybrid</option>
+              </select>
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Transmission</label>
-              <input {...register('transmission', { required: true })} placeholder="Automatic" className="block w-full rounded-xl border border-surface-800 bg-surface-900/50 py-3 px-4 text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all" />
+              <select {...register('transmission', { required: true })} className="block w-full rounded-xl border border-surface-800 bg-surface-900/50 py-3 px-4 text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all">
+                <option value="manual">Manual</option>
+                <option value="automatic">Automatic</option>
+              </select>
             </div>
             <div className="flex items-center gap-3 pt-4 sm:col-span-2">
               <input type="checkbox" {...register('airCondition')} className="h-5 w-5 rounded-lg border-surface-800 bg-surface-900 text-brand-600 focus:ring-brand-500/20" />
@@ -144,6 +182,10 @@ export default function CreateCarPage() {
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">0-100 KM/H (s)</label>
               <input type="number" {...register('mph', { required: true, valueAsNumber: true })} step="0.1" className="block w-full rounded-xl border border-surface-800 bg-surface-900/50 py-3 px-4 text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all" />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Top Speed (KM/H)</label>
+              <input type="number" {...register('topSpeed', { required: true, valueAsNumber: true })} className="block w-full rounded-xl border border-surface-800 bg-surface-900/50 py-3 px-4 text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all" />
             </div>
           </div>
         </div>
