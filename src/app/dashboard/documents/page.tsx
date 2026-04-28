@@ -49,9 +49,12 @@ export default function DocumentsPage() {
         ) : documents.map((doc: any) => (
           <div key={doc.id} className="bg-card rounded-2xl border border-surface-800/50 shadow-sm overflow-hidden flex flex-col group">
             <div className="p-5 border-b border-surface-800/50 bg-surface-900/30 flex justify-between items-center">
-              <div>
+              <div className="min-w-0 flex-1 mr-4">
                 <span className="text-[10px] font-bold text-surface-500 uppercase tracking-widest leading-none">User Identity</span>
-                <p className="text-sm font-bold text-surface-100 truncate w-32 mt-1" title={doc.id}>{doc.id}</p>
+                <p className="text-sm font-bold text-surface-100 truncate mt-1">
+                  {doc.name || 'Unknown User'}
+                </p>
+                <p className="text-[10px] text-surface-500 truncate font-medium">{doc.email}</p>
               </div>
               <div>
                 <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[10px] font-bold capitalize border ${doc.documentStatus === 'approved' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : doc.documentStatus === 'rejected' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>

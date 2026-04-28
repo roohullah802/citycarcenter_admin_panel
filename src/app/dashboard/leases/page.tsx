@@ -49,7 +49,7 @@ export default function LeasesPage() {
       cell: ({ row }: any) => (
         <div className="flex flex-col">
           <Link href={`/dashboard/users/${row.original.user?._id}`} className="text-surface-50 hover:text-brand-400 font-bold transition-colors">
-            {row.original.user?.username || 'Unknown'}
+            {row.original.user?.name || 'Unknown'}
           </Link>
           <span className="text-[10px] text-surface-500 font-medium tracking-wider uppercase">{row.original.user?.email || 'No Email'}</span>
         </div>

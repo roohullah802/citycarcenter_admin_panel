@@ -20,12 +20,12 @@ export default function UsersPage() {
               <img src={row.original.avatar} alt="avatar" className="h-full w-full object-cover" />
             ) : (
               <span className="text-surface-400 font-bold text-xs">
-                {row.original.username?.charAt(0).toUpperCase() || '?'}
+                {row.original.name?.charAt(0).toUpperCase() || '?'}
               </span>
             )}
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-surface-50 leading-none">{row.original.username}</span>
+            <span className="font-bold text-surface-50 leading-none">{row.original.name}</span>
             <span className="text-[10px] font-medium text-surface-500 mt-1 uppercase tracking-wider">{row.original.role || 'User'}</span>
           </div>
         </div>
