@@ -20,6 +20,8 @@ export default function DocumentsPage() {
   }
 
   const documents = getDocuments.data || []
+  console.log("docs ", documents);
+
 
   return (
     <div className="space-y-8 pb-10">
