@@ -40,7 +40,7 @@ export function Sidebar() {
         </div>
       </div>
       
-      <div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
+      <div className="flex flex-1 flex-col overflow-y-auto no-scrollbar px-4 py-4">
         <nav className="flex-1 space-y-1.5">
           <div className="text-[10px] font-bold text-surface-600 uppercase tracking-[0.15em] mb-4 px-4">
             General

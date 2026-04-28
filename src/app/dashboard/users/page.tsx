@@ -3,7 +3,7 @@
 import { useUsers } from '@/hooks/useUsers'
 import { DataTable } from '@/components/ui/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
-import { Loader2, Trash2, Eye, UserPlus } from 'lucide-react'
+import { Loader2, Trash2, Eye } from 'lucide-react'
 import Link from 'next/link'
 
 export default function UsersPage() {
@@ -122,11 +122,8 @@ export default function UsersPage() {
             Manage your customer base, verify documents, and track user activity.
           </p>
         </div>
-        <button className="flex items-center justify-center gap-2 px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-sm font-bold shadow-lg shadow-brand-500/20 transition-all">
-          <UserPlus className="h-4 w-4" />
-          Add New User
-        </button>
       </div>
+
 
       <DataTable columns={columns} data={getUsers.data || []} />
     </div>
