@@ -69,6 +69,8 @@ export default function DocumentsPage() {
               {doc.images && doc.images.length > 0 ? (
                 <div className="grid grid-cols-2 gap-3">
                   {doc.images.map((img: string, i: number) => {
+                    console.log("imm ", img);
+
                     const labels = ['CNIC Front', 'CNIC Back', 'Driving Licence', 'Extra Doc']
                     return (
                       <div key={i} className="flex flex-col gap-1">
