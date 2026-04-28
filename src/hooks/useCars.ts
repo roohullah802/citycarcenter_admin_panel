@@ -9,7 +9,7 @@ export function useCars() {
     queryKey: ['cars'],
     queryFn: async () => {
       const res = await api.get('/admin/cars/stats');
-      return res.data.totalCarsWithTotalLeases || res.data.cars;
+      return res.data.data;
     },
   });
 

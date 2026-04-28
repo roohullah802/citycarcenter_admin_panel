@@ -11,7 +11,6 @@ export function TokenInitializer() {
     const initToken = async () => {
       try {
         const token = await getToken()
-        console.log("token ", token);
 
         setAuthToken(token)
       } catch (error) {

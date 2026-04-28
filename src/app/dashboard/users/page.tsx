@@ -8,8 +8,6 @@ import Link from 'next/link'
 
 export default function UsersPage() {
   const { getUsers, deleteUser } = useUsers()
-  console.log("users data", getUsers.data);
-
 
   const columns: ColumnDef<any>[] = [
     {

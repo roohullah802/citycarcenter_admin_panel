@@ -9,8 +9,8 @@ export function useUsers() {
   const getUsers = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
-      const res = await api.get('/admin/users/stats/total');
-      return res.data.users;
+      const res = await api.get('/admin/users');
+      return res.data.data;
     },
   });
 

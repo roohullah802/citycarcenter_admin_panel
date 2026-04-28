@@ -5,7 +5,7 @@ import { Car, Users, ReceiptText, DollarSign, Loader2, ArrowUpRight, ArrowDownRi
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 export default function DashboardPage() {
-  const { totalUsers, totalCars, activeLeases, transactions, isLoading } = useDashboardStats()
+  const { data, isLoading } = useDashboardStats()
 
   if (isLoading) {
     return (
@@ -21,7 +21,7 @@ export default function DashboardPage() {
   const stats = [
     { 
       name: 'Total Users', 
-      stat: totalUsers.data || 0, 
+      stat: data?.stats?.totalUsers || 0, 
       icon: Users, 
       change: '+12.5%', 
       changeType: 'increase',
@@ -31,7 +31,7 @@ export default function DashboardPage() {
     },
     { 
       name: 'Total Cars', 
-      stat: totalCars.data || 0, 
+      stat: data?.stats?.totalCars || 0, 
       icon: Car, 
       change: '+3.2%', 
       changeType: 'increase',
@@ -41,7 +41,7 @@ export default function DashboardPage() {
     },
     { 
       name: 'Active Leases', 
-      stat: activeLeases.data || 0, 
+      stat: data?.stats?.activeLeases || 0, 
       icon: ReceiptText, 
       change: '-2.1%', 
       changeType: 'decrease',
@@ -51,7 +51,7 @@ export default function DashboardPage() {
     },
     { 
       name: 'Total Revenue', 
-      stat: `$${(transactions.data?.revenue || 0).toLocaleString()}`, 
+      stat: `$${(data?.stats?.totalRevenue || 0).toLocaleString()}`, 
       icon: DollarSign, 
       change: '+18.4%', 
       changeType: 'increase',
@@ -173,35 +173,35 @@ export default function DashboardPage() {
             <button className="text-xs font-bold text-brand-400 hover:text-brand-300 tracking-tight uppercase">View All</button>
           </div>
           <div className="flex-1 space-y-6">
-            {(transactions.data?.leases || []).slice(0, 6).map((lease: any) => (
-              <div key={lease._id} className="flex items-center gap-4 group">
+            {(data?.recentActivity || []).map((activity: any) => (
+              <div key={activity._id} className="flex items-center gap-4 group">
                 <div className="h-12 w-12 rounded-xl bg-surface-800/50 flex items-center justify-center border border-surface-700 group-hover:bg-brand-500/10 group-hover:border-brand-500/20 transition-colors duration-200">
                   <ReceiptText className="h-5 w-5 text-surface-500 group-hover:text-brand-400 transition-colors" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold text-surface-50 truncate">
-                    {lease.user?.username || 'Unknown User'}
+                    {activity.user?.username || 'System'}
                   </p>
                   <p className="text-xs font-medium text-surface-500 mt-0.5">
-                    {lease.car?.brand} {lease.car?.modelName}
+                    {activity.action === 'CAR_CREATED' ? 'Added new car' : activity.description}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-bold text-emerald-600">
-                    +${lease.totalAmount}
+                  <p className="text-sm font-bold text-brand-400 uppercase tracking-tighter">
+                    {activity.action.split('_')[0]}
                   </p>
                   <p className="text-[10px] font-medium text-surface-400 uppercase mt-0.5">
-                    {new Date(lease.createdAt).toLocaleDateString()}
+                    {new Date(activity.createdAt).toLocaleDateString()}
                   </p>
                 </div>
               </div>
             ))}
-            {(!transactions.data?.leases || transactions.data.leases.length === 0) && (
+            {(!data?.recentActivity || data.recentActivity.length === 0) && (
               <div className="flex flex-col items-center justify-center h-full text-center py-10">
                 <div className="h-16 w-16 rounded-full bg-surface-50 flex items-center justify-center mb-4">
                   <ReceiptText className="h-8 w-8 text-surface-200" />
                 </div>
-                <p className="text-sm font-medium text-surface-400">No recent transactions found.</p>
+                <p className="text-sm font-medium text-surface-400">No recent activities found.</p>
               </div>
             )}
           </div>

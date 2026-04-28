@@ -9,7 +9,7 @@ export function useDocuments() {
     queryKey: ['documents'],
     queryFn: async () => {
       const res = await api.get('/admin/users/documents');
-      return res.data.documents;
+      return res.data.data;
     },
   });
 

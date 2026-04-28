@@ -12,7 +12,7 @@ export default function ComplaintsPage() {
     queryKey: ['complaints'],
     queryFn: async () => {
       const res = await api.get('/admin/complaints')
-      return res.data.complains
+      return res.data.data
     },
   });
 

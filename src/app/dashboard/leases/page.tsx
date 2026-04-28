@@ -137,7 +137,7 @@ export default function LeasesPage() {
             </div>
             <p className="text-sm font-bold text-surface-400 uppercase tracking-wider">Total Revenue</p>
           </div>
-          <p className="text-4xl font-bold text-emerald-400 tracking-tight">${(getLeases.data?.totalRevenue || 0).toLocaleString()}</p>
+          <p className="text-4xl font-bold text-emerald-400 tracking-tight">${(getLeases.data?.stats?.totalRevenue || 0).toLocaleString()}</p>
         </div>
 
         <div className="bg-card border border-surface-800/50 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
@@ -150,11 +150,11 @@ export default function LeasesPage() {
             </div>
             <p className="text-sm font-bold text-surface-400 uppercase tracking-wider">Total Transactions</p>
           </div>
-          <p className="text-4xl font-bold text-surface-50 tracking-tight">{(getLeases.data?.totalTransactions || 0).toLocaleString()}</p>
+          <p className="text-4xl font-bold text-surface-50 tracking-tight">{(getLeases.data?.stats?.totalTransactions || 0).toLocaleString()}</p>
         </div>
       </div>
 
-      <DataTable columns={columns} data={getLeases.data?.leases || []} />
+      <DataTable columns={columns} data={getLeases.data?.data || []} />
     </div>
   )
 }
