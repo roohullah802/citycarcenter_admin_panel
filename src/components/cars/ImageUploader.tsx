@@ -23,7 +23,7 @@ const authenticator = async () => {
 };
 
 interface ImageUploaderProps {
-  onSuccess: (url: string) => void;
+  onSuccess: (res: { url: string; fileId: string }) => void;
   multiple?: boolean;
 }
 
@@ -40,7 +40,7 @@ export function ImageUploader({ onSuccess, multiple = false }: ImageUploaderProp
   const onUploadSuccess = (res: any) => {
     setIsUploading(false);
     toast.success('Image uploaded successfully');
-    onSuccess(res.url);
+    onSuccess({ url: res.url, fileId: res.fileId });
   };
 
   const onUploadStart = () => {

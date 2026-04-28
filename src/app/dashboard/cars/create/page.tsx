@@ -43,15 +43,12 @@ export default function CreateCarPage() {
     }
   })
   
-  const [images, setImages] = useState<string[]>([])
-  const [brandImage, setBrandImage] = useState<string>('')
+  const [images, setImages] = useState<{ url: string; fileId: string }[]>([])
+  const [brandImage, setBrandImage] = useState<{ url: string; fileId: string } | null>(null)
 
   const onSubmit = (data: any) => {
-    // Backend expects images: [{ url: string }] and requires available: boolean
-    const formattedImages = images.map(url => ({ url }))
-    
     createCar.mutate(
-      { ...data, images: formattedImages, brandImage, available: true },
+      { ...data, images, brandImage, available: true },
       {
         onSuccess: () => {
           router.push('/dashboard/cars')
@@ -205,11 +202,11 @@ export default function CreateCarPage() {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
             <div className="space-y-6">
               <label className="block text-sm font-bold text-surface-200 uppercase tracking-wider">Gallery Images</label>
-              <ImageUploader onSuccess={(url) => setImages(prev => [...prev, url])} multiple />
+              <ImageUploader onSuccess={(res) => setImages(prev => [...prev, res])} multiple />
               <div className="grid grid-cols-3 gap-4">
                 {images.map((img, i) => (
                   <div key={i} className="relative aspect-square group">
-                    <img src={img} alt="car" className="h-full w-full object-cover rounded-xl border border-surface-800 shadow-sm transition-transform group-hover:scale-105" />
+                    <img src={img.url} alt="car" className="h-full w-full object-cover rounded-xl border border-surface-800 shadow-sm transition-transform group-hover:scale-105" />
                     <button type="button" onClick={() => setImages(images.filter((_, idx) => idx !== i))} className="absolute -top-2 -right-2 bg-surface-900 rounded-full text-rose-500 p-1 shadow-lg border border-surface-800 hover:bg-rose-500 hover:text-white transition-colors">
                       <X className="h-4 w-4" />
                     </button>
@@ -219,13 +216,13 @@ export default function CreateCarPage() {
             </div>
             <div className="space-y-6">
               <label className="block text-sm font-bold text-surface-200 uppercase tracking-wider">Brand Logo</label>
-              <ImageUploader onSuccess={(url) => setBrandImage(url)} />
+              <ImageUploader onSuccess={(res) => setBrandImage(res)} />
               {brandImage && (
                 <div className="relative inline-block mt-4 group">
                   <div className="p-4 rounded-xl border border-surface-800 bg-surface-900/50 shadow-sm">
-                    <img src={brandImage} alt="brand" className="h-24 w-24 object-contain" />
+                    <img src={brandImage.url} alt="brand" className="h-24 w-24 object-contain" />
                   </div>
-                  <button type="button" onClick={() => setBrandImage('')} className="absolute -top-2 -right-2 bg-surface-900 rounded-full text-rose-500 p-1 shadow-lg border border-surface-800 hover:bg-rose-500 hover:text-white transition-colors">
+                  <button type="button" onClick={() => setBrandImage(null)} className="absolute -top-2 -right-2 bg-surface-900 rounded-full text-rose-500 p-1 shadow-lg border border-surface-800 hover:bg-rose-500 hover:text-white transition-colors">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
