@@ -3,11 +3,11 @@
 import { useUsers } from '@/hooks/useUsers'
 import { DataTable } from '@/components/ui/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
-import { Loader2, Trash2, Eye } from 'lucide-react'
+import { Loader2, Eye } from 'lucide-react'
 import Link from 'next/link'
 
 export default function UsersPage() {
-  const { getUsers, deleteUser } = useUsers()
+  const { getUsers } = useUsers()
 
   const columns: ColumnDef<any>[] = [
     {
@@ -82,16 +82,7 @@ export default function UsersPage() {
             >
               <Eye className="h-4 w-4" />
             </Link>
-            <button
-              onClick={() => {
-                if (window.confirm('Are you sure you want to delete this user? This will also free up any active leases.')) {
-                  deleteUser.mutate(row.original._id)
-                }
-              }}
-              className="p-2 text-surface-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all"
-            >
-              {deleteUser.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
-            </button>
+
           </div>
         )
       },

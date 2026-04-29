@@ -1,7 +1,7 @@
 'use client'
 
 import { UserButton } from '@clerk/nextjs'
-import { Bell, Search, Command } from 'lucide-react'
+import { Search, Command } from 'lucide-react'
 
 export function TopBar() {
   return (
@@ -27,14 +27,7 @@ export function TopBar() {
         </div>
         
         <div className="ml-4 flex items-center gap-6">
-          <button
-            type="button"
-            className="relative rounded-xl p-2.5 text-surface-400 hover:text-brand-400 hover:bg-brand-500/10 transition-all duration-200"
-          >
-            <span className="sr-only">View notifications</span>
-            <Bell className="h-5 w-5" aria-hidden="true" />
-            <span className="absolute top-2.5 right-2.5 block h-2 w-2 rounded-full bg-brand-500 ring-2 ring-surface-950" />
-          </button>
+
 
           <div className="h-8 w-px bg-surface-800 hidden sm:block" />
 

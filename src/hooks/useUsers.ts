@@ -23,23 +23,10 @@ export function useUsers() {
     enabled: !!id,
   });
 
-  const deleteUser = useMutation({
-    mutationFn: async (id: string) => {
-      const res = await api.delete(`/admin/users/${id}`);
-      return res.data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['users'] });
-      toast.success('User deleted successfully');
-    },
-    onError: (error: any) => {
-      toast.error(error?.response?.data?.message || 'Failed to delete user');
-    },
-  });
+
 
   return {
     getUsers,
     getUserDetails,
-    deleteUser,
   };
 }
