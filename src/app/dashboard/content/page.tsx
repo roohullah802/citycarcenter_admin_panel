@@ -7,7 +7,7 @@ import { Loader2, BookOpen, ShieldCheck } from 'lucide-react'
 export default function ContentPage() {
   const [activeTab, setActiveTab] = useState<'faqs' | 'policies'>('faqs')
   
-  const { setFAQs, setPolicy } = useContent()
+  const { getFAQs, setFAQs, deleteFAQ, getPolicies, setPolicy, deletePolicy } = useContent()
 
   // Form states
   const [faqQuestion, setFaqQuestion] = useState('')
@@ -104,6 +104,39 @@ export default function ContentPage() {
                   Publish Entry
                 </button>
               </div>
+
+              {/* FAQs List */}
+              <div className="mt-12 pt-8 border-t border-surface-800/50">
+                <h3 className="text-lg font-bold text-surface-50 mb-6">Existing FAQs</h3>
+                {getFAQs.isLoading ? (
+                  <div className="flex justify-center p-8"><Loader2 className="h-8 w-8 animate-spin text-brand-600" /></div>
+                ) : (
+                  <div className="space-y-4">
+                    {getFAQs.data?.map((faq: any) => (
+                      <div key={faq._id} className="p-4 rounded-xl bg-surface-900/50 border border-surface-800 flex justify-between gap-4">
+                        <div>
+                          <h4 className="font-bold text-surface-100">{faq.question}</h4>
+                          <p className="text-sm text-surface-400 mt-2 whitespace-pre-wrap">{faq.answer}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm('Are you sure you want to delete this FAQ?')) {
+                              deleteFAQ.mutate(faq._id)
+                            }
+                          }}
+                          className="self-start p-2 text-surface-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+                        >
+                          {deleteFAQ.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <span className="text-sm font-bold">Delete</span>}
+                        </button>
+                      </div>
+                    ))}
+                    {getFAQs.data?.length === 0 && (
+                      <p className="text-surface-500 text-center py-4 text-sm font-medium">No FAQs added yet.</p>
+                    )}
+                  </div>
+                )}
+              </div>
             </form>
           )}
 
@@ -140,6 +173,39 @@ export default function ContentPage() {
                   {setPolicy.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                   Update Policy
                 </button>
+              </div>
+
+              {/* Policies List */}
+              <div className="mt-12 pt-8 border-t border-surface-800/50">
+                <h3 className="text-lg font-bold text-surface-50 mb-6">Existing Policies</h3>
+                {getPolicies.isLoading ? (
+                  <div className="flex justify-center p-8"><Loader2 className="h-8 w-8 animate-spin text-brand-600" /></div>
+                ) : (
+                  <div className="space-y-4">
+                    {getPolicies.data?.map((policy: any) => (
+                      <div key={policy._id} className="p-4 rounded-xl bg-surface-900/50 border border-surface-800 flex justify-between gap-4">
+                        <div className="flex-1">
+                          <h4 className="font-bold text-surface-100">{policy.title}</h4>
+                          <p className="text-sm text-surface-400 mt-2 whitespace-pre-wrap line-clamp-3">{policy.content}</p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm('Are you sure you want to delete this policy?')) {
+                              deletePolicy.mutate(policy._id)
+                            }
+                          }}
+                          className="self-start p-2 text-surface-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors shrink-0"
+                        >
+                          {deletePolicy.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <span className="text-sm font-bold">Delete</span>}
+                        </button>
+                      </div>
+                    ))}
+                    {getPolicies.data?.length === 0 && (
+                      <p className="text-surface-500 text-center py-4 text-sm font-medium">No policies added yet.</p>
+                    )}
+                  </div>
+                )}
               </div>
             </form>
           )}

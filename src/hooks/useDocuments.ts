@@ -41,9 +41,24 @@ export function useDocuments() {
     },
   });
 
+  const deleteDocument = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.delete(`/admin/users/documents/${id}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['documents'] });
+      toast.success('Document verification reset');
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || 'Failed to delete document');
+    },
+  });
+
   return {
     getDocuments,
     approveDocument,
     rejectDocument,
+    deleteDocument,
   };
 }

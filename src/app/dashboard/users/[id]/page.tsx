@@ -89,7 +89,9 @@ export default function UserDetailsPage() {
                 {user.avatar ? (
                   <img src={user.avatar} alt="avatar" className="h-full w-full object-cover transition-transform group-hover:scale-110" />
                 ) : (
-                  <UserCircle2 className="h-12 w-12 text-surface-600" />
+                  <div className="h-full w-full bg-brand-500/10 flex items-center justify-center text-3xl font-bold text-brand-400 uppercase">
+                    {(user.name || user.username || '?').charAt(0)}
+                  </div>
                 )}
              </div>
              <h3 className="text-2xl font-bold text-surface-50 tracking-tight">{user.username}</h3>

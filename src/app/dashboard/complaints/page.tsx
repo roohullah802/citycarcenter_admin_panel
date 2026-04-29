@@ -1,10 +1,11 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { DataTable } from '@/components/ui/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
-import { Loader2, MessageSquareWarning } from 'lucide-react'
+import { Loader2, MessageSquareWarning, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
 import Link from 'next/link'
 
 export default function ComplaintsPage() {
@@ -13,6 +14,22 @@ export default function ComplaintsPage() {
     queryFn: async () => {
       const res = await api.get('/admin/complaints')
       return res.data.data
+    },
+  });
+
+  const queryClient = useQueryClient();
+
+  const deleteComplaint = useMutation({
+    mutationFn: async (id: string) => {
+      const res = await api.delete(`/admin/complaints/${id}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['complaints'] });
+      toast.success('Complaint deleted successfully');
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message || 'Failed to delete complaint');
     },
   });
 
@@ -49,6 +66,25 @@ export default function ComplaintsPage() {
           {new Date(row.original.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
         </span>
       ),
+    },
+    {
+      id: 'actions',
+      cell: ({ row }: any) => {
+        return (
+          <div className="flex items-center justify-end space-x-2">
+            <button
+              onClick={() => {
+                if (window.confirm('Are you sure you want to delete this complaint?')) {
+                  deleteComplaint.mutate(row.original._id)
+                }
+              }}
+              className="p-2 text-surface-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all"
+            >
+              {deleteComplaint.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+            </button>
+          </div>
+        )
+      },
     },
   ]
 

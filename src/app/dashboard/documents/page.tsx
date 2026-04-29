@@ -1,11 +1,11 @@
 'use client'
 
 import { useDocuments } from '@/hooks/useDocuments'
-import { Loader2, CheckCircle, XCircle, FileSearch, ExternalLink } from 'lucide-react'
+import { Loader2, CheckCircle, XCircle, FileSearch, ExternalLink, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 
 export default function DocumentsPage() {
-  const { getDocuments, approveDocument, rejectDocument } = useDocuments()
+  const { getDocuments, approveDocument, rejectDocument, deleteDocument } = useDocuments()
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   if (getDocuments.isLoading) {
@@ -127,6 +127,18 @@ export default function DocumentsPage() {
               >
                 {rejectDocument.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <XCircle className="mr-2 h-4 w-4" />}
                 Reject
+              </button>
+              <button
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to delete these documents and reset verification?')) {
+                    deleteDocument.mutate(doc.id)
+                  }
+                }}
+                disabled={deleteDocument.isPending}
+                className="flex justify-center items-center p-2.5 rounded-xl text-surface-400 hover:text-rose-400 hover:bg-rose-500/10 disabled:opacity-50 transition-all border border-transparent hover:border-rose-500/20"
+                title="Delete Documents & Reset"
+              >
+                {deleteDocument.isPending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Trash2 className="h-5 w-5" />}
               </button>
             </div>
           </div>
