@@ -84,7 +84,7 @@ export default function UserDetailsPage() {
         {/* User Details Card */}
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-card border border-surface-800/50 rounded-2xl p-8 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-600 via-brand-400 to-brand-600" />
+            <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-brand-600 via-brand-400 to-brand-600" />
             <div className="mx-auto h-24 w-24 rounded-2xl bg-surface-800 flex items-center justify-center overflow-hidden mb-6 border border-surface-700 shadow-xl group cursor-pointer">
               {user.avatar ? (
                 <img src={user.avatar} alt="avatar" className="h-full w-full object-cover transition-transform group-hover:scale-110" />
@@ -130,9 +130,9 @@ export default function UserDetailsPage() {
                   <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400">
                     <ShieldCheck className="h-4 w-4" />
                   </div>
-                  <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Kyc Status</span>
+                  <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Status</span>
                 </div>
-                <span className={`font-bold text-md uppercase tracking-widest ${user.documentStatus === 'approved' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                <span className={`font-bold text-xs uppercase tracking-widest ${user.documentStatus === 'approved' ? 'text-emerald-400' : 'text-amber-400'}`}>
                   {user.documentStatus || 'Pending'}
                 </span>
               </div>
@@ -150,7 +150,7 @@ export default function UserDetailsPage() {
             <DataTable columns={leaseColumns} data={activeLeases || []} />
           </div>
           <div className="bg-card border border-surface-800/50 rounded-2xl p-8 shadow-sm">
-            <h3 className="text-xl font-bold text-surface-50 mb-6 flex items-center gap-3 text-surface-400">
+            <h3 className="text-xl font-bold mb-6 flex items-center gap-3 text-surface-400">
               <span className="w-1.5 h-6 bg-surface-700 rounded-full" />
               Rental History
             </h3>
