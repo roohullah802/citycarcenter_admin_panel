@@ -8,7 +8,6 @@ export function useDashboardStats() {
       return {
         stats: res.data.stats,
         recentActivity: res.data.recentActivity,
-        chartData: res.data.chartData,
       };
     },
   });

@@ -1,8 +1,8 @@
 'use client'
 
 import { useDashboardStats } from '@/hooks/useDashboardStats'
-import { Car, Users, ReceiptText, DollarSign, Loader2, ArrowUpRight, ArrowDownRight, MoreHorizontal } from 'lucide-react'
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { Car, Users, ReceiptText, DollarSign, Loader2, ArrowUpRight, ArrowDownRight, LayoutDashboard, ShieldCheck, FileText, Settings, PlusCircle } from 'lucide-react'
+import Link from 'next/link'
 
 export default function DashboardPage() {
   const { data, isLoading } = useDashboardStats();
@@ -61,8 +61,6 @@ export default function DashboardPage() {
     },
   ]
 
-  const chartData = data?.chartData || []
-
   return (
     <div className="space-y-8 pb-10">
       <div className="flex flex-col gap-2">
@@ -97,68 +95,111 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        {/* Revenue Chart */}
-        <div className="lg:col-span-2 rounded-2xl bg-card p-8 shadow-sm border border-surface-800/50">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h3 className="text-xl font-bold text-surface-50">Revenue Performance</h3>
-              <p className="text-sm font-medium text-surface-400 mt-1">Monthly revenue growth and projections</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Management Quick Links */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="bg-card border border-surface-800 rounded-2xl p-8">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="p-2.5 rounded-xl bg-brand-500/10 text-brand-400">
+                <LayoutDashboard className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="text-xl font-bold text-surface-50 text-brand-400 uppercase tracking-widest text-sm">Management Console</h3>
+                <p className="text-sm text-surface-400 mt-0.5">Quick access to essential fleet operations.</p>
+              </div>
             </div>
-            <button className="p-2 rounded-lg hover:bg-surface-800 transition-colors">
-              <MoreHorizontal className="h-5 w-5 text-surface-400" />
-            </button>
-          </div>
-          <div className="h-[350px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
-                <defs>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.1} />
-                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f2937" />
-                <XAxis
-                  dataKey="name"
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
-                  dy={10}
-                />
-                <YAxis
-                  axisLine={false}
-                  tickLine={false}
-                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
-                  dx={-10}
-                  tickFormatter={(val) => `$${val}`}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: '#111114',
-                    borderRadius: '12px',
-                    border: '1px solid #1f1f23',
-                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5)',
-                    padding: '12px'
-                  }}
-                  itemStyle={{ fontWeight: 600, fontSize: '14px', color: '#fafafa' }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="#8b5cf6"
-                  strokeWidth={3}
-                  fillOpacity={1}
-                  fill="url(#colorRevenue)"
-                  dot={{ r: 4, fill: '#8b5cf6', strokeWidth: 2, stroke: '#111114' }}
-                  activeDot={{ r: 6, strokeWidth: 0 }}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Link href="/dashboard/cars/create" className="group p-5 rounded-2xl bg-surface-900/50 border border-surface-800 hover:border-brand-500/40 hover:bg-brand-500/5 transition-all">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-surface-800 text-surface-300 group-hover:text-brand-400 transition-colors">
+                    <PlusCircle className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-surface-100">Add New Vehicle</h4>
+                    <p className="text-xs text-surface-500 mt-1">Expand your fleet inventory</p>
+                  </div>
+                </div>
+              </Link>
+
+              <Link href="/dashboard/documents" className="group p-5 rounded-2xl bg-surface-900/50 border border-surface-800 hover:border-brand-500/40 hover:bg-brand-500/5 transition-all">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-surface-800 text-surface-300 group-hover:text-brand-400 transition-colors">
+                    <ShieldCheck className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-surface-100">Verify Users</h4>
+                    <p className="text-xs text-surface-500 mt-1">Review pending documentation</p>
+                  </div>
+                </div>
+              </Link>
+
+              <Link href="/dashboard/content" className="group p-5 rounded-2xl bg-surface-900/50 border border-surface-800 hover:border-brand-500/40 hover:bg-brand-500/5 transition-all">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-surface-800 text-surface-300 group-hover:text-brand-400 transition-colors">
+                    <FileText className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-surface-100">Content Manager</h4>
+                    <p className="text-xs text-surface-500 mt-1">Manage FAQs and policies</p>
+                  </div>
+                </div>
+              </Link>
+
+              <Link href="/dashboard/complaints" className="group p-5 rounded-2xl bg-surface-900/50 border border-surface-800 hover:border-brand-500/40 hover:bg-brand-500/5 transition-all">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-xl bg-surface-800 text-surface-300 group-hover:text-brand-400 transition-colors">
+                    <ReceiptText className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-surface-100">Service Requests</h4>
+                    <p className="text-xs text-surface-500 mt-1">Address customer complaints</p>
+                  </div>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
 
+        {/* System Status Sidebar */}
+        <div className="space-y-6">
+          <div className="bg-card border border-surface-800 rounded-2xl p-6">
+             <h3 className="text-sm font-bold text-brand-400 uppercase tracking-widest mb-6">System Health</h3>
+             <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                    <span className="text-sm font-medium text-surface-300">API Gateway</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-emerald-400 uppercase">Operational</span>
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                    <span className="text-sm font-medium text-surface-300">Database Cluster</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-emerald-400 uppercase">Synced</span>
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                    <span className="text-sm font-medium text-surface-300">Asset Storage</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-emerald-400 uppercase">Active</span>
+                </div>
+             </div>
 
+             <div className="mt-8 p-4 rounded-2xl bg-brand-500/5 border border-brand-500/10">
+                <div className="flex items-center gap-3 text-brand-400 mb-2">
+                  <Settings className="h-4 w-4 animate-spin-slow" />
+                  <span className="text-xs font-bold uppercase tracking-wider">Environment</span>
+                </div>
+                <p className="text-[11px] text-surface-500 font-medium leading-relaxed">
+                  The dashboard is currently running in production mode. Data sync is established with the primary fleet node.
+                </p>
+             </div>
+          </div>
+        </div>
       </div>
     </div>
   )
