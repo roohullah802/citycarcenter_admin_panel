@@ -19,41 +19,41 @@ export default function DashboardPage() {
   }
 
   const stats = [
-    { 
-      name: 'Total Users', 
-      stat: data?.stats?.totalUsers || 0, 
-      icon: Users, 
-      change: '+12.5%', 
+    {
+      name: 'Total Users',
+      stat: data?.stats?.totalUsers || 0,
+      icon: Users,
+      change: '+12.5%',
       changeType: 'increase',
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/10',
       borderColor: 'border-blue-500/20'
     },
-    { 
-      name: 'Total Cars', 
-      stat: data?.stats?.totalCars || 0, 
-      icon: Car, 
-      change: '+3.2%', 
+    {
+      name: 'Total Cars',
+      stat: data?.stats?.totalCars || 0,
+      icon: Car,
+      change: '+3.2%',
       changeType: 'increase',
       color: 'text-purple-400',
       bgColor: 'bg-purple-500/10',
       borderColor: 'border-purple-500/20'
     },
-    { 
-      name: 'Active Leases', 
-      stat: data?.stats?.activeLeases || 0, 
-      icon: ReceiptText, 
-      change: '-2.1%', 
+    {
+      name: 'Active Leases',
+      stat: data?.stats?.activeLeases || 0,
+      icon: ReceiptText,
+      change: '-2.1%',
       changeType: 'decrease',
       color: 'text-emerald-400',
       bgColor: 'bg-emerald-500/10',
       borderColor: 'border-emerald-500/20'
     },
-    { 
-      name: 'Total Revenue', 
-      stat: `$${(data?.stats?.totalRevenue || 0).toLocaleString()}`, 
-      icon: DollarSign, 
-      change: '+18.4%', 
+    {
+      name: 'Total Revenue',
+      stat: `$${(data?.stats?.totalRevenue || 0).toLocaleString()}`,
+      icon: DollarSign,
+      change: '+18.4%',
       changeType: 'increase',
       color: 'text-amber-400',
       bgColor: 'bg-amber-500/10',
@@ -122,44 +122,44 @@ export default function DashboardPage() {
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.1} />
+                    <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1f2937" />
-                <XAxis 
-                  dataKey="name" 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }} 
-                  dy={10} 
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
+                  dy={10}
                 />
-                <YAxis 
-                  axisLine={false} 
-                  tickLine={false} 
-                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }} 
-                  dx={-10} 
-                  tickFormatter={(val) => `$${val}`} 
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
+                  dx={-10}
+                  tickFormatter={(val) => `$${val}`}
                 />
-                <Tooltip 
-                  contentStyle={{ 
+                <Tooltip
+                  contentStyle={{
                     backgroundColor: '#111114',
-                    borderRadius: '12px', 
-                    border: '1px solid #1f1f23', 
+                    borderRadius: '12px',
+                    border: '1px solid #1f1f23',
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.5)',
                     padding: '12px'
                   }}
                   itemStyle={{ fontWeight: 600, fontSize: '14px', color: '#fafafa' }}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="revenue" 
-                  stroke="#8b5cf6" 
-                  strokeWidth={3} 
-                  fillOpacity={1} 
-                  fill="url(#colorRevenue)" 
-                  dot={{ r: 4, fill: '#8b5cf6', strokeWidth: 2, stroke: '#111114' }} 
-                  activeDot={{ r: 6, strokeWidth: 0 }} 
+                <Area
+                  type="monotone"
+                  dataKey="revenue"
+                  stroke="#8b5cf6"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#colorRevenue)"
+                  dot={{ r: 4, fill: '#8b5cf6', strokeWidth: 2, stroke: '#111114' }}
+                  activeDot={{ r: 6, strokeWidth: 0 }}
                 />
               </AreaChart>
             </ResponsiveContainer>

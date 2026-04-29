@@ -33,15 +33,19 @@
 }
 
 :root {
-  --background: #09090b; /* surface-950 */
-  --foreground: #fafafa; /* surface-50 */
-  --card: #111114; /* slightly lighter than 950 */
+  --background: #09090b;
+  /* surface-950 */
+  --foreground: #fafafa;
+  /* surface-50 */
+  --card: #111114;
+  /* slightly lighter than 950 */
   --card-foreground: #fafafa;
   --popover: #09090b;
   --popover-foreground: #fafafa;
   --primary: #8b5cf6;
   --primary-foreground: #fafafa;
-  --secondary: #18181b; /* surface-900 */
+  --secondary: #18181b;
+  /* surface-900 */
   --secondary-foreground: #fafafa;
   --muted: #18181b;
   --muted-foreground: #71717a;
@@ -49,7 +53,8 @@
   --accent-foreground: #fafafa;
   --destructive: #ef4444;
   --destructive-foreground: #fafafa;
-  --border: #1f1f23; /* surface-800 roughly */
+  --border: #1f1f23;
+  /* surface-800 roughly */
   --input: #1f1f23;
   --ring: #8b5cf6;
   --radius: 0.75rem;
@@ -59,12 +64,14 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
+
   body::-webkit-scrollbar {
     display: none;
   }
@@ -74,17 +81,17 @@
   .glass {
     @apply bg-surface-950/60 backdrop-blur-md border border-white/10;
   }
-  
+
   .premium-shadow {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
   }
-  
+
   .premium-gradient {
     @apply bg-gradient-to-br from-brand-600 to-brand-800;
   }
 
   .sidebar-item-active {
-    @apply bg-brand-600/10 text-brand-400 border border-brand-500/20 shadow-[0_0_15px_rgba(139,92,246,0.1)];
+    @apply bg-brand-600/10 text-brand-400 border border-brand-500/20 shadow-[0_0_15px_rgba(139, 92, 246, 0.1)];
   }
 
   .sidebar-item-inactive {
@@ -94,6 +101,7 @@
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
+
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
