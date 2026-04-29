@@ -132,7 +132,7 @@ export default function UserDetailsPage() {
                   </div>
                   <span className="mr-4 text-surface-400 text-xs font-bold uppercase tracking-wider">Status</span>
                 </div>
-                <span className={`font-bold text-[15px] uppercase tracking-widest ${user.documentStatus === 'approved' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                <span className={`font-bold text-[10px] uppercase tracking-widest ${user.documentStatus === 'approved' ? 'text-emerald-400' : 'text-amber-400'}`}>
                   {user.documentStatus || 'Pending'}
                 </span>
               </div>
