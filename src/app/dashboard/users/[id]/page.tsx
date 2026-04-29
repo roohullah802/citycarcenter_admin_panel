@@ -84,59 +84,59 @@ export default function UserDetailsPage() {
         {/* User Details Card */}
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-card border border-surface-800/50 rounded-2xl p-8 text-center relative overflow-hidden">
-             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-600 via-brand-400 to-brand-600" />
-             <div className="mx-auto h-24 w-24 rounded-2xl bg-surface-800 flex items-center justify-center overflow-hidden mb-6 border border-surface-700 shadow-xl group cursor-pointer">
-                {user.avatar ? (
-                  <img src={user.avatar} alt="avatar" className="h-full w-full object-cover transition-transform group-hover:scale-110" />
-                ) : (
-                  <div className="h-full w-full bg-brand-500/10 flex items-center justify-center text-3xl font-bold text-brand-400 uppercase">
-                    {(user.name || user.username || '?').charAt(0)}
-                  </div>
-                )}
-             </div>
-             <h3 className="text-2xl font-bold text-surface-50 tracking-tight">{user.username}</h3>
-             <p className="text-brand-400 font-medium mt-1">{user.email}</p>
-             <p className="text-sm text-surface-500 mt-2 flex items-center justify-center gap-2">
-               <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-               Member since {new Date(user.createdAt).getFullYear()}
-             </p>
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-600 via-brand-400 to-brand-600" />
+            <div className="mx-auto h-24 w-24 rounded-2xl bg-surface-800 flex items-center justify-center overflow-hidden mb-6 border border-surface-700 shadow-xl group cursor-pointer">
+              {user.avatar ? (
+                <img src={user.avatar} alt="avatar" className="h-full w-full object-cover transition-transform group-hover:scale-110" />
+              ) : (
+                <div className="h-full w-full bg-brand-500/10 flex items-center justify-center text-3xl font-bold text-brand-400 uppercase">
+                  {(user.name || user.username || '?').charAt(0)}
+                </div>
+              )}
+            </div>
+            <h3 className="text-2xl font-bold text-surface-50 tracking-tight">{user.username}</h3>
+            <p className="text-brand-400 font-medium mt-1">{user.email}</p>
+            <p className="text-sm text-surface-500 mt-2 flex items-center justify-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              Member since {new Date(user.createdAt).getFullYear()}
+            </p>
           </div>
-          
-          <div className="bg-card border border-surface-800/50 rounded-2xl p-6">
-             <h3 className="text-sm font-bold text-surface-100 uppercase tracking-widest mb-6">Account Overview</h3>
-             <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800/30">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
-                      <Wallet className="h-4 w-4" />
-                    </div>
-                    <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">LTD Spend</span>
-                  </div>
-                  <span className="font-bold text-emerald-400 text-lg">${totalPaid.toLocaleString()}</span>
-                </div>
-                
-                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800/30">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-brand-500/10 text-brand-400">
-                      <Calendar className="h-4 w-4" />
-                    </div>
-                    <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Active Rentals</span>
-                  </div>
-                  <span className="font-bold text-surface-50 text-lg">{activeLeases?.length || 0}</span>
-                </div>
 
-                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800/30">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400">
-                      <ShieldCheck className="h-4 w-4" />
-                    </div>
-                    <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Kyc Status</span>
+          <div className="bg-card border border-surface-800/50 rounded-2xl p-6">
+            <h3 className="text-sm font-bold text-surface-100 uppercase tracking-widest mb-6">Account Overview</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800/30">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
+                    <Wallet className="h-4 w-4" />
                   </div>
-                  <span className={`font-bold text-xs uppercase tracking-widest ${user.documentStatus === 'approved' ? 'text-emerald-400' : 'text-amber-400'}`}>
-                    {user.documentStatus || 'Pending'}
-                  </span>
+                  <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">LTD Spend</span>
                 </div>
-             </div>
+                <span className="font-bold text-emerald-400 text-lg">${totalPaid.toLocaleString()}</span>
+              </div>
+
+              <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800/30">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-brand-500/10 text-brand-400">
+                    <Calendar className="h-4 w-4" />
+                  </div>
+                  <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Active Rentals</span>
+                </div>
+                <span className="font-bold text-surface-50 text-lg">{activeLeases?.length || 0}</span>
+              </div>
+
+              <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800/30">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400">
+                    <ShieldCheck className="h-4 w-4" />
+                  </div>
+                  <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Kyc Status</span>
+                </div>
+                <span className={`font-bold text-md uppercase tracking-widest ${user.documentStatus === 'approved' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                  {user.documentStatus || 'Pending'}
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
