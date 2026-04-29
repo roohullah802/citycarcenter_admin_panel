@@ -130,7 +130,7 @@ export default function UserDetailsPage() {
                   <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400">
                     <ShieldCheck className="h-4 w-4" />
                   </div>
-                  <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Status <pre>  </pre></span>
+                  <span className="mr-4 text-surface-400 text-xs font-bold uppercase tracking-wider">Status</span>
                 </div>
                 <span className={`font-bold text-xs uppercase tracking-widest ${user.documentStatus === 'approved' ? 'text-emerald-400' : 'text-amber-400'}`}>
                   {user.documentStatus || 'Pending'}
