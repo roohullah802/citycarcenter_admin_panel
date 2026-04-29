@@ -3,11 +3,18 @@
 import { useUsers } from '@/hooks/useUsers'
 import { DataTable } from '@/components/ui/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
-import { Loader2, Eye } from 'lucide-react'
+import { Loader2, Eye, SearchX } from 'lucide-react'
 import Link from 'next/link'
+import { useSearch } from '@/context/SearchContext'
 
 export default function UsersPage() {
   const { getUsers } = useUsers()
+  const { searchQuery } = useSearch()
+
+  const filteredUsers = (getUsers.data || []).filter((user: any) => 
+    user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    user.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   const columns: ColumnDef<any>[] = [
     {
@@ -114,7 +121,17 @@ export default function UsersPage() {
       </div>
 
 
-      <DataTable columns={columns} data={getUsers.data || []} />
+      {filteredUsers.length === 0 && searchQuery ? (
+        <div className="flex flex-col items-center justify-center py-20 bg-card rounded-2xl border border-surface-800/50">
+          <div className="p-4 rounded-full bg-surface-900 border border-surface-800 mb-4">
+            <SearchX className="h-8 w-8 text-surface-500" />
+          </div>
+          <h3 className="text-lg font-bold text-surface-100">No users found</h3>
+          <p className="text-surface-500 text-sm mt-1">We couldn't find any users matching "{searchQuery}"</p>
+        </div>
+      ) : (
+        <DataTable columns={columns} data={filteredUsers} />
+      )}
     </div>
   )
 }

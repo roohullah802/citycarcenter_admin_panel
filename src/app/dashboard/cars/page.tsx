@@ -3,12 +3,20 @@
 import { useCars } from '@/hooks/useCars'
 import { DataTable } from '@/components/ui/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
-import { Loader2, Plus, Edit2, Trash2, Eye, CarFront } from 'lucide-react'
+import { Loader2, Plus, Edit2, Trash2, Eye, CarFront, SearchX } from 'lucide-react'
 import Link from 'next/link'
+import { useSearch } from '@/context/SearchContext'
 import Image from 'next/image'
 
 export default function CarsPage() {
   const { getCars, deleteCar } = useCars()
+  const { searchQuery } = useSearch()
+
+  const filteredCars = (getCars.data || []).filter((car: any) => 
+    car.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    car.modelName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    car.plateNumber?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   const columns: ColumnDef<any>[] = [
     {
@@ -120,7 +128,17 @@ export default function CarsPage() {
         </Link>
       </div>
 
-      <DataTable columns={columns} data={getCars.data || []} />
+      {filteredCars.length === 0 && searchQuery ? (
+        <div className="flex flex-col items-center justify-center py-20 bg-card rounded-2xl border border-surface-800/50">
+          <div className="p-4 rounded-full bg-surface-900 border border-surface-800 mb-4">
+            <SearchX className="h-8 w-8 text-surface-500" />
+          </div>
+          <h3 className="text-lg font-bold text-surface-100">No vehicles found</h3>
+          <p className="text-surface-500 text-sm mt-1">We couldn't find any vehicles matching "{searchQuery}"</p>
+        </div>
+      ) : (
+        <DataTable columns={columns} data={filteredCars} />
+      )}
     </div>
   )
 }

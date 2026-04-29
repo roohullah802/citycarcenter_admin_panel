@@ -1,29 +1,78 @@
 'use client'
 
 import { UserButton } from '@clerk/nextjs'
-import { Search, Command } from 'lucide-react'
+import { Search, Command, X } from 'lucide-react'
+import { useSearch } from '@/context/SearchContext'
+import { usePathname } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export function TopBar() {
+  const { searchQuery, setSearchQuery } = useSearch()
+  const pathname = usePathname()
+  const [localSearch, setLocalSearch] = useState(searchQuery)
+
+  // Sync local search with global search query when it changes elsewhere
+  useEffect(() => {
+    setLocalSearch(searchQuery)
+  }, [searchQuery])
+
+  // Determine if search bar should be visible
+  const searchEnabledRoutes = [
+    '/dashboard/users',
+    '/dashboard/cars',
+    '/dashboard/leases',
+    '/dashboard/complaints',
+    '/dashboard/documents'
+  ]
+
+  const isSearchEnabled = searchEnabledRoutes.some(route => pathname.startsWith(route))
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setLocalSearch(value)
+    setSearchQuery(value)
+  }
+
+  const clearSearch = () => {
+    setLocalSearch('')
+    setSearchQuery('')
+  }
+
   return (
     <div className="sticky top-0 z-10 flex h-20 flex-shrink-0 glass border-b border-surface-800/50 shadow-sm">
       <div className="flex flex-1 justify-between px-8">
         <div className="flex flex-1 items-center">
-          <div className="relative w-full max-w-md hidden md:block">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <Search className="h-4 w-4 text-surface-500" />
-            </div>
-            <input
-              type="text"
-              className="block w-full pl-10 pr-12 py-2.5 border border-surface-800 rounded-xl bg-surface-900/50 text-sm text-surface-100 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500/50 transition-all placeholder:text-surface-600"
-              placeholder="Search anything..."
-            />
-            <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <div className="flex items-center gap-1 px-1.5 py-0.5 rounded border border-surface-800 bg-surface-900 text-[10px] font-medium text-surface-400">
-                <Command className="h-3 w-3" />
-                <span>K</span>
+          {isSearchEnabled ? (
+            <div className="relative w-full max-w-md hidden md:block">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <Search className="h-4 w-4 text-surface-500" />
+              </div>
+              <input
+                type="text"
+                value={localSearch}
+                onChange={handleSearchChange}
+                className="block w-full pl-10 pr-12 py-2.5 border border-surface-800 rounded-xl bg-surface-900/50 text-sm text-surface-100 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500/50 transition-all placeholder:text-surface-600"
+                placeholder={`Search ${pathname.split('/').pop()}...`}
+              />
+              <div className="absolute inset-y-0 right-0 flex items-center pr-3">
+                {localSearch ? (
+                  <button 
+                    onClick={clearSearch}
+                    className="p-1 rounded-md hover:bg-surface-800 text-surface-500 transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-1 px-1.5 py-0.5 rounded border border-surface-800 bg-surface-900 text-[10px] font-medium text-surface-400 pointer-events-none">
+                    <Command className="h-3 w-3" />
+                    <span>K</span>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
+          ) : (
+            <div className="h-10" /> // Placeholder to keep spacing
+          )}
         </div>
         
         <div className="ml-4 flex items-center gap-6">

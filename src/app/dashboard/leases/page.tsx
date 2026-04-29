@@ -4,9 +4,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { DataTable } from '@/components/ui/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
-import { Loader2, Trash2, ReceiptText, TrendingUp, CreditCard } from 'lucide-react'
+import { Loader2, Trash2, ReceiptText, TrendingUp, CreditCard, SearchX } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import { useSearch } from '@/context/SearchContext'
 
 export default function LeasesPage() {
   const queryClient = useQueryClient()
@@ -18,6 +19,15 @@ export default function LeasesPage() {
       return res.data
     },
   })
+
+  const { searchQuery } = useSearch()
+
+  const filteredLeases = (getLeases.data?.data || []).filter((lease: any) => 
+    lease.car?.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    lease.car?.modelName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    lease.user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    lease.user?.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   const deleteLease = useMutation({
     mutationFn: async (id: string) => {
@@ -154,7 +164,17 @@ export default function LeasesPage() {
         </div>
       </div>
 
-      <DataTable columns={columns} data={getLeases.data?.data || []} />
+      {filteredLeases.length === 0 && searchQuery ? (
+        <div className="flex flex-col items-center justify-center py-20 bg-card rounded-2xl border border-surface-800/50">
+          <div className="p-4 rounded-full bg-surface-900 border border-surface-800 mb-4">
+            <SearchX className="h-8 w-8 text-surface-500" />
+          </div>
+          <h3 className="text-lg font-bold text-surface-100">No transactions found</h3>
+          <p className="text-surface-500 text-sm mt-1">We couldn't find any records matching "{searchQuery}"</p>
+        </div>
+      ) : (
+        <DataTable columns={columns} data={filteredLeases} />
+      )}
     </div>
   )
 }

@@ -4,9 +4,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { DataTable } from '@/components/ui/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
-import { Loader2, MessageSquareWarning, Trash2 } from 'lucide-react'
+import { Loader2, MessageSquareWarning, Trash2, SearchX } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
+import { useSearch } from '@/context/SearchContext'
 
 export default function ComplaintsPage() {
   const getComplaints = useQuery({
@@ -16,6 +17,14 @@ export default function ComplaintsPage() {
       return res.data.data
     },
   });
+
+  const { searchQuery } = useSearch()
+
+  const filteredComplaints = (getComplaints.data || []).filter((complaint: any) => 
+    complaint.userId?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    complaint.userId?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    complaint.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   const queryClient = useQueryClient();
 
@@ -115,7 +124,17 @@ export default function ComplaintsPage() {
         </div>
       </div>
 
-      <DataTable columns={columns} data={getComplaints.data || []} />
+      {filteredComplaints.length === 0 && searchQuery ? (
+        <div className="flex flex-col items-center justify-center py-20 bg-card rounded-2xl border border-surface-800/50">
+          <div className="p-4 rounded-full bg-surface-900 border border-surface-800 mb-4">
+            <SearchX className="h-8 w-8 text-surface-500" />
+          </div>
+          <h3 className="text-lg font-bold text-surface-100">No complaints found</h3>
+          <p className="text-surface-500 text-sm mt-1">We couldn't find any records matching "{searchQuery}"</p>
+        </div>
+      ) : (
+        <DataTable columns={columns} data={filteredComplaints} />
+      )}
     </div>
   )
 }

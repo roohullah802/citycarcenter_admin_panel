@@ -1,8 +1,9 @@
 'use client'
 
 import { useDocuments } from '@/hooks/useDocuments'
-import { Loader2, CheckCircle, XCircle, FileSearch, ExternalLink, Trash2 } from 'lucide-react'
+import { Loader2, CheckCircle, XCircle, FileSearch, ExternalLink, Trash2, SearchX } from 'lucide-react'
 import { useState } from 'react'
+import { useSearch } from '@/context/SearchContext'
 
 export default function DocumentsPage() {
   const { getDocuments, approveDocument, rejectDocument, deleteDocument } = useDocuments()
@@ -20,7 +21,12 @@ export default function DocumentsPage() {
   }
 
   const documents = getDocuments.data || []
-  console.log("docs ", documents);
+  const { searchQuery } = useSearch()
+
+  const filteredDocuments = documents.filter((doc: any) => 
+    doc.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    doc.email?.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
 
   return (
@@ -40,15 +46,19 @@ export default function DocumentsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {documents.length === 0 ? (
+        {filteredDocuments.length === 0 ? (
           <div className="col-span-full py-20 text-center text-surface-500 bg-card rounded-2xl border border-surface-800/50 shadow-sm flex flex-col items-center gap-4">
             <div className="h-16 w-16 rounded-full bg-surface-800/50 flex items-center justify-center">
-              <CheckCircle className="h-8 w-8 text-surface-700" />
+              {searchQuery ? <SearchX className="h-8 w-8 text-surface-700" /> : <CheckCircle className="h-8 w-8 text-surface-700" />}
             </div>
-            <p className="text-lg font-bold text-surface-300">All caught up!</p>
-            <p className="text-sm font-medium">No pending documents to review at this time.</p>
+            <p className="text-lg font-bold text-surface-300">
+              {searchQuery ? `No results for "${searchQuery}"` : "All caught up!"}
+            </p>
+            <p className="text-sm font-medium">
+              {searchQuery ? "Try searching for a different name or email." : "No pending documents to review at this time."}
+            </p>
           </div>
-        ) : documents.map((doc: any) => (
+        ) : filteredDocuments.map((doc: any) => (
           <div key={doc.id} className="bg-card rounded-2xl border border-surface-800/50 shadow-sm overflow-hidden flex flex-col group">
             <div className="p-5 border-b border-surface-800/50 bg-surface-900/30 flex justify-between items-center">
               <div className="min-w-0 flex-1 mr-4">
