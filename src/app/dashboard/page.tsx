@@ -5,7 +5,7 @@ import { Car, Users, ReceiptText, DollarSign, Loader2, ArrowUpRight, ArrowDownRi
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 export default function DashboardPage() {
-  const { data, isLoading } = useDashboardStats()
+  const { data, isLoading } = useDashboardStats();
 
   if (isLoading) {
     return (
@@ -61,15 +61,7 @@ export default function DashboardPage() {
     },
   ]
 
-  const chartData = [
-    { name: 'Jan', revenue: 4000 },
-    { name: 'Feb', revenue: 3000 },
-    { name: 'Mar', revenue: 5000 },
-    { name: 'Apr', revenue: 2780 },
-    { name: 'May', revenue: 4890 },
-    { name: 'Jun', revenue: 6390 },
-    { name: 'Jul', revenue: 7490 },
-  ]
+  const chartData = data?.chartData || []
 
   return (
     <div className="space-y-8 pb-10">
