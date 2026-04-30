@@ -31,7 +31,6 @@ export default function DocumentsPage() {
     doc.email?.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
-  // Helper to normalize document data from various possible structures
   const getProcessedDocs = (doc: any) => {
     const docs: { url: string; label: string; category: 'identity' | 'extra' }[] = []
 
@@ -39,12 +38,24 @@ export default function DocumentsPage() {
     if (doc.cnicBack?.url) docs.push({ url: doc.cnicBack.url, label: 'CNIC Back', category: 'identity' })
     if (doc.drivingLicence?.url) docs.push({ url: doc.drivingLicence.url, label: 'Driving Licence', category: 'identity' })
 
-    if (Array.isArray(doc.extraDocuments)) {
-      doc.extraDocuments.forEach((d: any, i: number) => {
-        if (d?.url) docs.push({ url: d.url, label: doc.extraDocuments.length > 1 ? `Extra Doc ${i + 1}` : 'Extra Document', category: 'extra' })
-      })
-    } else if (doc.extraDocuments?.url) {
-      docs.push({ url: doc.extraDocuments.url, label: 'Extra Document', category: 'extra' })
+    // Handle Extra Documents (can be array or single object)
+    const extraDocs = doc.extraDocuments || doc.extraDocument;
+    if (Array.isArray(extraDocs)) {
+      extraDocs.forEach((d: any, i: number) => {
+        const url = typeof d === 'string' ? d : d?.url;
+        if (url) {
+          docs.push({
+            url,
+            label: extraDocs.length > 1 ? `Extra Doc ${i + 1}` : 'Extra Document',
+            category: 'extra'
+          });
+        }
+      });
+    } else if (extraDocs) {
+      const url = typeof extraDocs === 'string' ? extraDocs : extraDocs.url;
+      if (url) {
+        docs.push({ url, label: 'Extra Document', category: 'extra' });
+      }
     }
 
     // Fallback for legacy data or different backend structure
@@ -77,7 +88,7 @@ export default function DocumentsPage() {
             Review and authenticate user identification documents to ensure platform security and regulatory compliance.
           </p>
         </div>
-        
+
         <div className="hidden lg:flex items-center gap-8 px-6 py-4 rounded-2xl bg-surface-900/50 border border-surface-800/50 backdrop-blur-sm">
           <div className="text-center">
             <p className="text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-1">Pending</p>
@@ -117,7 +128,7 @@ export default function DocumentsPage() {
             <div key={doc.id || doc._id} className="group relative bg-surface-900/40 border border-surface-800/50 rounded-3xl overflow-hidden hover:border-brand-500/30 transition-all duration-500 hover:shadow-2xl hover:shadow-brand-500/5">
               {/* Background Glow */}
               <div className="absolute top-0 right-0 -mr-20 -mt-20 w-40 h-40 bg-brand-500/5 blur-[80px] rounded-full group-hover:bg-brand-500/10 transition-colors" />
-              
+
               <div className="p-6 relative">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-6">
@@ -127,13 +138,12 @@ export default function DocumentsPage() {
                     </h3>
                     <p className="text-xs font-medium text-surface-500 truncate mt-0.5">{doc.email}</p>
                   </div>
-                  <div className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter border ${
-                    doc.documentStatus === 'approved' 
-                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' 
-                      : doc.documentStatus === 'rejected' 
-                        ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' 
+                  <div className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter border ${doc.documentStatus === 'approved'
+                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                      : doc.documentStatus === 'rejected'
+                        ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
                         : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                  }`}>
+                    }`}>
                     {doc.documentStatus || 'pending'}
                   </div>
                 </div>
@@ -211,12 +221,12 @@ export default function DocumentsPage() {
 
       {/* Image Previewer Modal */}
       {selectedImage && (
-        <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-300" 
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-300"
           onClick={() => setSelectedImage(null)}
         >
           <div className="absolute inset-0 bg-surface-950/90 backdrop-blur-xl" />
-          
+
           <div className="relative max-w-6xl w-full h-full flex flex-col animate-in zoom-in-95 duration-500" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4 relative z-10">
               <div className="px-4 py-2 rounded-full bg-surface-900 border border-surface-800 flex items-center gap-3">
@@ -230,12 +240,12 @@ export default function DocumentsPage() {
                 <XCircle className="h-5 w-5" />
               </button>
             </div>
-            
+
             <div className="flex-1 relative rounded-3xl overflow-hidden bg-surface-900 border border-surface-800/50 shadow-2xl">
-              <img 
-                src={selectedImage.url} 
-                alt="Document Full View" 
-                className="w-full h-full object-contain" 
+              <img
+                src={selectedImage.url}
+                alt="Document Full View"
+                className="w-full h-full object-contain"
               />
             </div>
 
