@@ -55,10 +55,7 @@ export function TopBar() {
                 <Menu className="h-6 w-6" />
               </button>
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg premium-gradient shadow-lg shadow-brand-500/20">
-                  <ShieldCheck className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-sm font-bold text-white tracking-tight">City Car</span>
+                <span className="text-sm font-bold text-white tracking-tight">City Car Center</span>
               </div>
             </div>
           )}
@@ -79,7 +76,7 @@ export function TopBar() {
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   {localSearch ? (
-                    <button 
+                    <button
                       onClick={clearSearch}
                       className="p-1 rounded-md hover:bg-surface-800 text-surface-500 transition-colors"
                     >
@@ -109,7 +106,7 @@ export function TopBar() {
                       className="block w-full pl-10 pr-10 py-2 border border-brand-500/50 rounded-xl bg-surface-900 text-sm text-surface-100 focus:outline-none ring-2 ring-brand-500/20"
                       placeholder="Search..."
                     />
-                    <button 
+                    <button
                       onClick={() => {
                         setIsMobileSearchOpen(false)
                         clearSearch()
@@ -120,7 +117,7 @@ export function TopBar() {
                     </button>
                   </div>
                 ) : (
-                  <button 
+                  <button
                     onClick={() => setIsMobileSearchOpen(true)}
                     className="p-2 text-surface-400 hover:text-white"
                   >
@@ -130,10 +127,10 @@ export function TopBar() {
               </div>
             </>
           )}
-          
+
           {!isSearchEnabled && !isMobileSearchOpen && <div className="h-10 lg:hidden" />}
         </div>
-        
+
         {!isMobileSearchOpen && (
           <div className="ml-4 flex items-center gap-2 sm:gap-6">
             <div className="h-8 w-px bg-surface-800 hidden sm:block" />
@@ -145,7 +142,7 @@ export function TopBar() {
                 <span className="text-[10px] font-medium text-surface-500 mt-1">Super Admin</span>
               </div>
               <div className="p-0.5 rounded-full ring-2 ring-brand-500/20">
-                <UserButton 
+                <UserButton
                   appearance={{
                     elements: {
                       userButtonAvatarBox: "h-8 w-8 sm:h-9 sm:w-9 rounded-full"
