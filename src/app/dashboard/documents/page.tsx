@@ -38,35 +38,15 @@ export default function DocumentsPage() {
     if (doc.cnicBack?.url) docs.push({ url: doc.cnicBack.url, label: 'CNIC Back', category: 'identity' })
     if (doc.drivingLicence?.url) docs.push({ url: doc.drivingLicence.url, label: 'Driving Licence', category: 'identity' })
 
-    // Handle Extra Documents (can be array or single object)
-    const extraDocs = doc.extraDocuments || doc.extraDocument;
-    if (Array.isArray(extraDocs)) {
-      extraDocs.forEach((d: any, i: number) => {
-        const url = typeof d === 'string' ? d : d?.url;
-        if (url) {
+    if (Array.isArray(doc.extraDocuments)) {
+      doc.extraDocuments.forEach((d: any, i: number) => {
+        if (d?.url) {
           docs.push({
-            url,
-            label: extraDocs.length > 1 ? `Extra Doc ${i + 1}` : 'Extra Document',
+            url: d.url,
+            label: doc.extraDocuments.length > 1 ? `Extra Doc ${i + 1}` : 'Extra Document',
             category: 'extra'
-          });
+          })
         }
-      });
-    } else if (extraDocs) {
-      const url = typeof extraDocs === 'string' ? extraDocs : extraDocs.url;
-      if (url) {
-        docs.push({ url, label: 'Extra Document', category: 'extra' });
-      }
-    }
-
-    // Fallback for legacy data or different backend structure
-    if (docs.length === 0 && Array.isArray(doc.images)) {
-      const labels = ['CNIC Front', 'CNIC Back', 'Driving Licence', 'Extra Doc']
-      doc.images.forEach((url: string, i: number) => {
-        docs.push({
-          url,
-          label: labels[i] || `Document ${i + 1}`,
-          category: i < 3 ? 'identity' : 'extra'
-        })
       })
     }
 
@@ -138,9 +118,9 @@ export default function DocumentsPage() {
                     </h3>
                     <p className="text-xs font-medium text-surface-500 truncate mt-0.5">{doc.email}</p>
                   </div>
-                  <div className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter border ${doc.documentStatus === 'approved'
+                    <div className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter border ${doc.documentStatus === 'approved'
                       ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                      : doc.documentStatus === 'rejected'
+                      : doc.documentStatus === 'declined'
                         ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
                         : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
                     }`}>
@@ -195,7 +175,7 @@ export default function DocumentsPage() {
                 </button>
                 <button
                   onClick={() => rejectDocument.mutate(doc.id || doc._id)}
-                  disabled={doc.documentStatus === 'rejected' || rejectDocument.isPending}
+                  disabled={doc.documentStatus === 'declined' || rejectDocument.isPending}
                   className="flex-1 h-10 flex items-center justify-center gap-2 rounded-xl text-[11px] font-bold text-white bg-rose-600 hover:bg-rose-500 disabled:opacity-30 disabled:grayscale transition-all shadow-lg shadow-rose-950/20 active:scale-95"
                 >
                   {rejectDocument.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <XCircle className="h-3.5 w-3.5" />}
