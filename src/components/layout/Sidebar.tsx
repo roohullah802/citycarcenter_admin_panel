@@ -3,12 +3,12 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useSidebar } from '@/context/SidebarContext'
-import { 
-  LayoutDashboard, 
-  Car, 
-  Users, 
-  ReceiptText, 
-  FileCheck2, 
+import {
+  LayoutDashboard,
+  Car,
+  Users,
+  ReceiptText,
+  FileCheck2,
   AlertTriangle,
   FileText,
   ShieldCheck,
@@ -33,7 +33,7 @@ export function Sidebar() {
     <>
       {/* Backdrop for mobile */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 z-40 bg-surface-950/80 backdrop-blur-sm lg:hidden transition-opacity duration-300"
           onClick={close}
         />
@@ -46,24 +46,21 @@ export function Sidebar() {
       `}>
         <div className="flex h-20 shrink-0 items-center justify-between px-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl premium-gradient shadow-lg shadow-brand-500/20">
-              <ShieldCheck className="h-6 w-6 text-white" />
-            </div>
             <div className="flex flex-col">
-              <span className="text-sm font-bold text-white tracking-tight leading-none">City Car</span>
+              <span className="text-sm font-bold text-white tracking-tight leading-none">City Car Center</span>
               <span className="text-[10px] font-medium text-surface-50 uppercase tracking-[0.2em] mt-1">Admin Panel</span>
             </div>
           </div>
-          
+
           {/* Close button for mobile */}
-          <button 
+          <button
             onClick={close}
             className="p-2 -mr-2 text-surface-400 hover:text-white lg:hidden transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
-        
+
         <div className="flex flex-1 flex-col overflow-y-auto no-scrollbar px-4 py-4">
           <nav className="flex-1 space-y-1.5">
             <div className="text-[10px] font-bold text-surface-600 uppercase tracking-[0.15em] mb-4 px-4">
@@ -78,8 +75,8 @@ export function Sidebar() {
                   onClick={close}
                   className={`
                     group flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200
-                    ${isActive 
-                      ? 'bg-brand-600/10 text-brand-400 border border-brand-500/20 shadow-[0_0_15px_rgba(139,92,246,0.1)]' 
+                    ${isActive
+                      ? 'bg-brand-600/10 text-brand-400 border border-brand-500/20 shadow-[0_0_15px_rgba(139,92,246,0.1)]'
                       : 'text-surface-400 hover:bg-surface-800/50 hover:text-surface-100 border border-transparent'}
                   `}
                 >
@@ -95,7 +92,7 @@ export function Sidebar() {
               )
             })}
           </nav>
-          
+
           <div className="mt-auto px-4 py-6">
             <div className="rounded-2xl bg-surface-900 border border-surface-800/50 p-4">
               <p className="text-xs font-medium text-surface-400">System Status</p>
