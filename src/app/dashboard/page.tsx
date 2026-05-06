@@ -4,6 +4,12 @@ import { useDashboardStats } from '@/hooks/useDashboardStats'
 import { Car, Users, ReceiptText, DollarSign, Loader2, ArrowUpRight, ArrowDownRight, LayoutDashboard, ShieldCheck, FileText, Settings, PlusCircle } from 'lucide-react'
 import Link from 'next/link'
 
+
+export const metadata = {
+  title: "Dashboard | City Car Center",
+};
+
+
 export default function DashboardPage() {
   const { data, isLoading } = useDashboardStats();
 
@@ -164,40 +170,40 @@ export default function DashboardPage() {
         {/* System Status Sidebar */}
         <div className="space-y-6">
           <div className="bg-card border border-surface-800 rounded-2xl p-6">
-             <h3 className="text-sm font-bold text-brand-400 uppercase tracking-widest mb-6">System Health</h3>
-             <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                    <span className="text-sm font-medium text-surface-300">API Gateway</span>
-                  </div>
-                  <span className="text-[10px] font-bold text-emerald-400 uppercase">Operational</span>
+            <h3 className="text-sm font-bold text-brand-400 uppercase tracking-widest mb-6">System Health</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                  <span className="text-sm font-medium text-surface-300">API Gateway</span>
                 </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                    <span className="text-sm font-medium text-surface-300">Database Cluster</span>
-                  </div>
-                  <span className="text-[10px] font-bold text-emerald-400 uppercase">Synced</span>
+                <span className="text-[10px] font-bold text-emerald-400 uppercase">Operational</span>
+              </div>
+              <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                  <span className="text-sm font-medium text-surface-300">Database Cluster</span>
                 </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                    <span className="text-sm font-medium text-surface-300">Asset Storage</span>
-                  </div>
-                  <span className="text-[10px] font-bold text-emerald-400 uppercase">Active</span>
+                <span className="text-[10px] font-bold text-emerald-400 uppercase">Synced</span>
+              </div>
+              <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                  <span className="text-sm font-medium text-surface-300">Asset Storage</span>
                 </div>
-             </div>
+                <span className="text-[10px] font-bold text-emerald-400 uppercase">Active</span>
+              </div>
+            </div>
 
-             <div className="mt-8 p-4 rounded-2xl bg-brand-500/5 border border-brand-500/10">
-                <div className="flex items-center gap-3 text-brand-400 mb-2">
-                  <Settings className="h-4 w-4 animate-spin-slow" />
-                  <span className="text-xs font-bold uppercase tracking-wider">Environment</span>
-                </div>
-                <p className="text-[11px] text-surface-500 font-medium leading-relaxed">
-                  The dashboard is currently running in production mode. Data sync is established with the primary fleet node.
-                </p>
-             </div>
+            <div className="mt-8 p-4 rounded-2xl bg-brand-500/5 border border-brand-500/10">
+              <div className="flex items-center gap-3 text-brand-400 mb-2">
+                <Settings className="h-4 w-4 animate-spin-slow" />
+                <span className="text-xs font-bold uppercase tracking-wider">Environment</span>
+              </div>
+              <p className="text-[11px] text-surface-500 font-medium leading-relaxed">
+                The dashboard is currently running in production mode. Data sync is established with the primary fleet node.
+              </p>
+            </div>
           </div>
         </div>
       </div>

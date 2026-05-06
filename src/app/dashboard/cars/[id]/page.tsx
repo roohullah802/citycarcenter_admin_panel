@@ -123,22 +123,22 @@ export default function CarDetailsPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="bg-card border border-surface-800/50 rounded-2xl p-6">
-             <h3 className="text-sm font-bold text-surface-100 uppercase tracking-widest mb-6 flex items-center gap-2">
-               <TrendingUp className="h-4 w-4 text-brand-400" />
-               Performance Metrics
-             </h3>
-             <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800/30">
-                  <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Generated Revenue</span>
-                  <span className="font-bold text-emerald-400 text-lg">${totalRevenue.toLocaleString()}</span>
-                </div>
-                <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800/30">
-                  <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Times Leased</span>
-                  <span className="font-bold text-surface-50 text-lg">{totalLeases}</span>
-                </div>
-             </div>
+            <h3 className="text-sm font-bold text-surface-100 uppercase tracking-widest mb-6 flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-brand-400" />
+              Performance Metrics
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800/30">
+                <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Generated Revenue</span>
+                <span className="font-bold text-emerald-400 text-lg">${totalRevenue.toLocaleString()}</span>
+              </div>
+              <div className="flex items-center justify-between p-4 rounded-xl bg-surface-900/50 border border-surface-800/30">
+                <span className="text-surface-400 text-xs font-bold uppercase tracking-wider">Times Leased</span>
+                <span className="font-bold text-surface-50 text-lg">{totalLeases}</span>
+              </div>
+            </div>
           </div>
         </div>
 
