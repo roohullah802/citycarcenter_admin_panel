@@ -8,7 +8,10 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Admin Panel | City Car Center',
+  title: {
+    default: 'Admin Panel | City Car Center',
+    template: " %s | City Car Center Admin"
+  },
   description: 'Premium administration panel for City Car Center',
 }
 
