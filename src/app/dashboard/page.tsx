@@ -2,7 +2,6 @@
 
 import { useDashboardStats } from '@/hooks/useDashboardStats'
 import { Car, Users, ReceiptText, DollarSign, Loader2, ArrowUpRight, ArrowDownRight, LayoutDashboard, ShieldCheck, FileText, Settings, PlusCircle } from 'lucide-react'
-import { Metadata } from 'next';
 import Link from 'next/link'
 
 
