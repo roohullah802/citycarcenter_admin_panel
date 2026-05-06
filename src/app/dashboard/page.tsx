@@ -6,11 +6,6 @@ import { Metadata } from 'next';
 import Link from 'next/link'
 
 
-export const metadata: Metadata = {
-  title: "Dashboard | City Car Center",
-};
-
-
 export default function DashboardPage() {
   const { data, isLoading } = useDashboardStats();
 
