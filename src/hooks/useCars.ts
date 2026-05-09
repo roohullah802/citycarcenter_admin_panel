@@ -55,8 +55,9 @@ export function useCars() {
       const res = await api.patch(`/admin/cars/${id}`, data);
       return res.data;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['cars'] });
+      queryClient.invalidateQueries({ queryKey: ['car', variables.id] });
       toast.success('Car updated successfully');
     },
     onError: (error: any) => {
