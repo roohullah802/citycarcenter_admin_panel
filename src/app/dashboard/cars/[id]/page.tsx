@@ -10,6 +10,8 @@ export default function CarDetailsPage() {
   const params = useParams()
   const { getCarDetails } = useCars()
   const { data, isLoading } = getCarDetails(params.id as string)
+  console.log('car data ',data);
+  
 
   if (isLoading) {
     return (
