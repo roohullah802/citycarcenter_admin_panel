@@ -3,20 +3,34 @@
 import { useCars } from '@/hooks/useCars'
 import { DataTable } from '@/components/ui/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
-import { Loader2, Plus, Edit2, Trash2, Eye, CarFront, SearchX } from 'lucide-react'
+import { Loader2, Plus, Trash2, Eye, CarFront, SearchX } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useSearch } from '@/context/SearchContext'
-import Image from 'next/image'
+import { useMemo } from 'react'
 
 export default function CarsPage() {
   const { getCars, deleteCar } = useCars()
   const { searchQuery } = useSearch()
+  const router = useRouter()
 
-  const filteredCars = (getCars.data || []).filter((car: any) => 
-    car.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    car.modelName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    car.plateNumber?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  // Tokenized search: splits query by spaces and checks each token
+  // Fixes the bug where "word1 word2" didn't match
+  const filteredCars = useMemo(() => {
+    if (!searchQuery) return getCars.data || []
+    const tokens = searchQuery.toLowerCase().split(/\s+/).filter(Boolean)
+    return (getCars.data || []).filter((car: any) => {
+      const searchableText = [
+        car.brand,
+        car.modelName,
+        car.plateNumber,
+        car.color,
+        String(car.year),
+      ].filter(Boolean).join(' ').toLowerCase()
+
+      return tokens.every(token => searchableText.includes(token))
+    })
+  }, [getCars.data, searchQuery])
 
   const columns: ColumnDef<any>[] = [
     {
@@ -49,7 +63,9 @@ export default function CarsPage() {
       cell: ({ row }) => (
         <div className="flex flex-col">
           <span className="text-emerald-400 font-bold">${row.original.pricePerDay}</span>
-          <span className="text-[10px] text-surface-500 font-medium">Daily Base</span>
+          {row.original.discountEnabled && row.original.discountPercentage > 0 && (
+            <span className="text-[10px] text-amber-400 font-bold">{row.original.discountPercentage}% OFF</span>
+          )}
         </div>
       ),
     },
@@ -75,13 +91,13 @@ export default function CarsPage() {
       cell: ({ row }) => {
         return (
           <div className="flex items-center justify-end space-x-2">
-            <Link 
-              href={`/dashboard/cars/${row.original._id}`} 
+            <button
+              onClick={() => router.push(`/dashboard/cars/${row.original._id}`)}
               className="p-2 text-surface-400 hover:text-brand-400 hover:bg-brand-500/10 rounded-lg transition-all"
             >
               <Eye className="h-4 w-4" />
-            </Link>
-            <button 
+            </button>
+            <button
               onClick={() => {
                 if(window.confirm('Are you sure you want to delete this car?')) {
                   deleteCar.mutate(row.original._id)
@@ -137,7 +153,11 @@ export default function CarsPage() {
           <p className="text-surface-500 text-sm mt-1">We couldn't find any vehicles matching "{searchQuery}"</p>
         </div>
       ) : (
-        <DataTable columns={columns} data={filteredCars} />
+        <DataTable
+          columns={columns}
+          data={filteredCars}
+          onRowClick={(row: any) => router.push(`/dashboard/cars/${row._id}`)}
+        />
       )}
     </div>
   )

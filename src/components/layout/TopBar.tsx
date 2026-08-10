@@ -1,11 +1,11 @@
 'use client'
 
 import { UserButton } from '@clerk/nextjs'
-import { Search, Command, X, Menu, ShieldCheck } from 'lucide-react'
+import { Search, Command, X, Menu } from 'lucide-react'
 import { useSearch } from '@/context/SearchContext'
 import { useSidebar } from '@/context/SidebarContext'
 import { usePathname } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 export function TopBar() {
   const { searchQuery, setSearchQuery } = useSearch()
@@ -13,17 +13,33 @@ export function TopBar() {
   const pathname = usePathname()
   const [localSearch, setLocalSearch] = useState(searchQuery)
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   // Sync local search with global search query when it changes elsewhere
   useEffect(() => {
     setLocalSearch(searchQuery)
   }, [searchQuery])
 
+  // Cmd+K / Ctrl+K global keyboard shortcut listener to focus search bar
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        if (inputRef.current) {
+          inputRef.current.focus()
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [])
+
   // Determine if search bar should be visible
   const searchEnabledRoutes = [
     '/dashboard/users',
     '/dashboard/cars',
     '/dashboard/leases',
+    '/dashboard/damage',
     '/dashboard/complaints',
     '/dashboard/documents'
   ]
@@ -42,7 +58,7 @@ export function TopBar() {
   }
 
   return (
-    <div className="sticky top-0 z-30 flex h-20 flex-shrink-0 glass border-b border-surface-800/50 shadow-sm">
+    <div className="sticky top-0 z-30 flex h-20 shrink-0 glass border-b border-surface-800/50 shadow-sm">
       <div className="flex flex-1 justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex flex-1 items-center gap-4">
           {/* Mobile menu button and Logo */}
@@ -68,11 +84,12 @@ export function TopBar() {
                   <Search className="h-4 w-4 text-surface-500" />
                 </div>
                 <input
+                  ref={inputRef}
                   type="text"
                   value={localSearch}
                   onChange={handleSearchChange}
                   className="block w-full pl-10 pr-12 py-2.5 border border-surface-800 rounded-xl bg-surface-900/50 text-sm text-surface-100 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500/50 transition-all placeholder:text-surface-600"
-                  placeholder={`Search ${pathname.split('/').pop()}...`}
+                  placeholder={`Search ${pathname.split('/').pop()?.replace('-', ' ') || 'records'}...`}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
                   {localSearch ? (

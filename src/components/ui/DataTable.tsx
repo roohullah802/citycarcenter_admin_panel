@@ -12,11 +12,13 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  onRowClick?: (row: TData) => void
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({ data, columns, getCoreRowModel: getCoreRowModel(), getPaginationRowModel: getPaginationRowModel() })
 
@@ -51,7 +53,15 @@ export function DataTable<TData, TValue>({
                 table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    className="hover:bg-surface-800/30 transition-colors group"
+                    className={`hover:bg-surface-800/30 transition-colors group ${onRowClick ? 'cursor-pointer' : ''}`}
+                    onClick={(e) => {
+                      if (!onRowClick) return
+                      // Don't trigger row click if user clicked on a button, link, or interactive element
+                      const target = e.target as HTMLElement
+                      const isInteractive = target.closest('button, a, [role="button"], input, select, textarea')
+                      if (isInteractive) return
+                      onRowClick(row.original)
+                    }}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <td key={cell.id} className="px-6 py-4 whitespace-nowrap text-surface-300 group-hover:text-surface-100 transition-colors">

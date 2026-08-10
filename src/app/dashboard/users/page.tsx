@@ -3,18 +3,53 @@
 import { useUsers } from '@/hooks/useUsers'
 import { DataTable } from '@/components/ui/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
-import { Loader2, Eye, SearchX } from 'lucide-react'
-import Link from 'next/link'
+import { Loader2, Eye, SearchX, Calendar, X } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useSearch } from '@/context/SearchContext'
+import { useState, useMemo } from 'react'
 
 export default function UsersPage() {
   const { getUsers } = useUsers()
   const { searchQuery } = useSearch()
+  const router = useRouter()
 
-  const filteredUsers = (getUsers.data || []).filter((user: any) => 
-    user.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    user.email?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  // Date filter state
+  const [dateFrom, setDateFrom] = useState('')
+  const [dateTo, setDateTo] = useState('')
+
+  const filteredUsers = useMemo(() => {
+    let users = getUsers.data || []
+
+    // Text search — tokenized to handle multi-word queries
+    if (searchQuery) {
+      const tokens = searchQuery.toLowerCase().split(/\s+/).filter(Boolean)
+      users = users.filter((user: any) =>
+        tokens.every(token =>
+          user.name?.toLowerCase().includes(token) ||
+          user.email?.toLowerCase().includes(token)
+        )
+      )
+    }
+
+    // Date filter
+    if (dateFrom) {
+      const from = new Date(dateFrom)
+      from.setHours(0, 0, 0, 0)
+      users = users.filter((user: any) => new Date(user.createdAt) >= from)
+    }
+    if (dateTo) {
+      const to = new Date(dateTo)
+      to.setHours(23, 59, 59, 999)
+      users = users.filter((user: any) => new Date(user.createdAt) <= to)
+    }
+
+    return users
+  }, [getUsers.data, searchQuery, dateFrom, dateTo])
+
+  const clearDateFilter = () => {
+    setDateFrom('')
+    setDateTo('')
+  }
 
   const columns: ColumnDef<any>[] = [
     {
@@ -83,13 +118,12 @@ export default function UsersPage() {
       cell: ({ row }) => {
         return (
           <div className="flex items-center justify-end space-x-2">
-            <Link
-              href={`/dashboard/users/${row.original._id}`}
+            <button
+              onClick={() => router.push(`/dashboard/users/${row.original._id}`)}
               className="p-2 text-surface-400 hover:text-brand-400 hover:bg-brand-500/10 rounded-lg transition-all"
             >
               <Eye className="h-4 w-4" />
-            </Link>
-
+            </button>
           </div>
         )
       },
@@ -120,17 +154,66 @@ export default function UsersPage() {
         </div>
       </div>
 
+      {/* Date Filter */}
+      <div className="flex flex-wrap items-center gap-4 bg-card border border-surface-800/50 rounded-2xl p-4">
+        <div className="flex items-center gap-2 text-surface-400">
+          <Calendar className="h-4 w-4" />
+          <span className="text-xs font-bold uppercase tracking-wider">Filter by Date</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-medium text-surface-500">From</label>
+            <input
+              type="date"
+              value={dateFrom}
+              onChange={(e) => setDateFrom(e.target.value)}
+              className="rounded-xl border border-surface-800 bg-surface-900/50 py-2 px-3 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-xs font-medium text-surface-500">To</label>
+            <input
+              type="date"
+              value={dateTo}
+              onChange={(e) => setDateTo(e.target.value)}
+              className="rounded-xl border border-surface-800 bg-surface-900/50 py-2 px-3 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all"
+            />
+          </div>
+          {(dateFrom || dateTo) && (
+            <button
+              onClick={clearDateFilter}
+              className="p-2 text-surface-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-all"
+              title="Clear date filter"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+        {(dateFrom || dateTo) && (
+          <span className="text-xs text-brand-400 font-medium">
+            Showing {filteredUsers.length} user(s)
+          </span>
+        )}
+      </div>
 
-      {filteredUsers.length === 0 && searchQuery ? (
+      {filteredUsers.length === 0 && (searchQuery || dateFrom || dateTo) ? (
         <div className="flex flex-col items-center justify-center py-20 bg-card rounded-2xl border border-surface-800/50">
           <div className="p-4 rounded-full bg-surface-900 border border-surface-800 mb-4">
             <SearchX className="h-8 w-8 text-surface-500" />
           </div>
           <h3 className="text-lg font-bold text-surface-100">No users found</h3>
-          <p className="text-surface-500 text-sm mt-1">We couldn't find any users matching "{searchQuery}"</p>
+          <p className="text-surface-500 text-sm mt-1">
+            {searchQuery
+              ? `We couldn't find any users matching "${searchQuery}"`
+              : `No users found for the selected date range`}
+          </p>
         </div>
       ) : (
-        <DataTable columns={columns} data={filteredUsers} />
+        <DataTable
+          columns={columns}
+          data={filteredUsers}
+          onRowClick={(row: any) => router.push(`/dashboard/users/${row._id}`)}
+        />
       )}
     </div>
   )

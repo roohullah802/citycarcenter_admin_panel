@@ -136,7 +136,7 @@ export default function LeasesPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-card border border-surface-800/50 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
           <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500">
             <TrendingUp className="h-24 w-24 text-emerald-400" />
@@ -145,22 +145,46 @@ export default function LeasesPage() {
             <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400">
               <TrendingUp className="h-5 w-5" />
             </div>
-            <p className="text-sm font-bold text-surface-400 uppercase tracking-wider">Total Revenue</p>
+            <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Total Revenue</p>
           </div>
-          <p className="text-4xl font-bold text-emerald-400 tracking-tight">${(getLeases.data?.stats?.totalRevenue || 0).toLocaleString()}</p>
+          <p className="text-3xl font-bold text-emerald-400 tracking-tight">${(getLeases.data?.stats?.totalRevenue || 0).toLocaleString()}</p>
+          <p className="text-[10px] text-surface-500 mt-2">Inc. tax & fees</p>
+        </div>
+
+        <div className="bg-card border border-surface-800/50 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 rounded-xl bg-blue-500/10 text-blue-400">
+              <TrendingUp className="h-5 w-5" />
+            </div>
+            <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Gross Profit</p>
+          </div>
+          <p className="text-3xl font-bold text-blue-400 tracking-tight">${(getLeases.data?.stats?.grossProfit || 0).toLocaleString()}</p>
+          <p className="text-[10px] text-surface-500 mt-2">Discounts: -${(getLeases.data?.stats?.totalDiscountsGiven || 0).toLocaleString()}</p>
+        </div>
+
+        <div className="bg-card border border-surface-800/50 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 rounded-xl bg-brand-500/10 text-brand-400">
+              <TrendingUp className="h-5 w-5" />
+            </div>
+            <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Net Profit</p>
+          </div>
+          <p className="text-3xl font-bold text-brand-400 tracking-tight">${(getLeases.data?.stats?.netProfit || 0).toLocaleString()}</p>
+          <p className="text-[10px] text-surface-500 mt-2">Stripe fees: -${(getLeases.data?.stats?.totalStripeFees || 0).toLocaleString()}</p>
         </div>
 
         <div className="bg-card border border-surface-800/50 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
           <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500">
-            <CreditCard className="h-24 w-24 text-brand-400" />
+            <CreditCard className="h-24 w-24 text-surface-400" />
           </div>
           <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 rounded-xl bg-brand-500/10 text-brand-400">
+            <div className="p-3 rounded-xl bg-surface-800 text-surface-300">
               <CreditCard className="h-5 w-5" />
             </div>
-            <p className="text-sm font-bold text-surface-400 uppercase tracking-wider">Total Transactions</p>
+            <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Transactions</p>
           </div>
-          <p className="text-4xl font-bold text-surface-50 tracking-tight">{(getLeases.data?.stats?.totalTransactions || 0).toLocaleString()}</p>
+          <p className="text-3xl font-bold text-surface-50 tracking-tight">{(getLeases.data?.stats?.totalTransactions || 0).toLocaleString()}</p>
+          <p className="text-[10px] text-surface-500 mt-2">Total leases processed</p>
         </div>
       </div>
 
