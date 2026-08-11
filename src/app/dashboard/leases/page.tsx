@@ -46,9 +46,10 @@ export default function LeasesPage() {
   // Dynamic calculations: Net Profit = Gross Profit - Expenses
   const rawStats = getLeases.data?.stats || {}
   const grossProfit = rawStats.grossProfit ?? rawStats.totalRevenue ?? 0
+  const loggedExpenses = rawStats.loggedExpenses ?? 0
   const damageExpenses = rawStats.damageExpenses ?? 0
   const stripeFees = rawStats.totalStripeFees ?? 0
-  const totalExpenses = rawStats.totalExpenses ?? (damageExpenses + stripeFees)
+  const totalExpenses = rawStats.totalExpenses ?? (loggedExpenses + damageExpenses + stripeFees)
   const netProfit = rawStats.netProfit ?? (grossProfit - totalExpenses)
   const totalTransactions = rawStats.totalTransactions ?? (getLeases.data?.data || []).length
 
@@ -173,7 +174,7 @@ export default function LeasesPage() {
             <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Total Expenses</p>
           </div>
           <p className="text-3xl font-bold text-rose-400 tracking-tight">${totalExpenses.toLocaleString()}</p>
-          <p className="text-[10px] text-surface-500 mt-2">Repairs: ${damageExpenses.toLocaleString()} • Fees: ${stripeFees.toLocaleString()}</p>
+          <p className="text-[10px] text-surface-500 mt-2">Logged: ${loggedExpenses.toLocaleString()} • Repairs: ${damageExpenses.toLocaleString()}</p>
         </div>
 
         {/* Net Profit (Gross Profit - Expenses) */}

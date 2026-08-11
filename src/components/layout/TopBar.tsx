@@ -39,6 +39,7 @@ export function TopBar() {
     '/dashboard/users',
     '/dashboard/cars',
     '/dashboard/leases',
+    '/dashboard/expenses',
     '/dashboard/damage',
     '/dashboard/complaints',
     '/dashboard/documents'
