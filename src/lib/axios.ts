@@ -26,6 +26,33 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Response interceptor: Retry 401s once with a fresh Clerk token (handles expired/missing tokens)
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      typeof window !== 'undefined' &&
+      (window as any).Clerk?.session
+    ) {
+      originalRequest._retry = true;
+      try {
+        const token = await (window as any).Clerk.session.getToken();
+        if (token) {
+          setAuthToken(token);
+          originalRequest.headers['Authorization'] = `Bearer ${token}`;
+          return api(originalRequest);
+        }
+      } catch (retryErr) {
+        console.error('Token refresh retry failed:', retryErr);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const setAuthToken = (token: string | null) => {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -33,3 +60,4 @@ export const setAuthToken = (token: string | null) => {
     delete api.defaults.headers.common['Authorization'];
   }
 };
+
