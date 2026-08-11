@@ -51,8 +51,8 @@ export default function DashboardPage() {
       borderColor: 'border-emerald-500/20'
     },
     {
-      name: 'Total Revenue',
-      stat: `$${(data?.stats?.totalRevenue || 0).toLocaleString()}`,
+      name: 'Gross Profit',
+      stat: `$${(data?.stats?.grossProfit || data?.stats?.totalRevenue || 0).toLocaleString()}`,
       icon: DollarSign,
       change: '+18.4%',
       changeType: 'increase',
