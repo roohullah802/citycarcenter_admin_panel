@@ -105,7 +105,7 @@ export default function DashboardPage() {
                 <LayoutDashboard className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-surface-50 text-brand-400 uppercase tracking-widest text-sm">Management Console</h3>
+                <h3 className="text-xl font-bold text-brand-400 uppercase tracking-widest">Management Console</h3>
                 <p className="text-sm text-surface-400 mt-0.5">Quick access to essential fleet operations.</p>
               </div>
             </div>

@@ -255,7 +255,7 @@ export default function ExpensesPage() {
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
               onClick={(e) => e.currentTarget.showPicker?.()}
-              className="rounded-xl border border-surface-800 bg-surface-900/50 py-2 px-3 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all cursor-pointer [color-scheme:dark]"
+              className="rounded-xl border border-surface-800 bg-surface-900/50 py-2 px-3 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all cursor-pointer scheme:dark"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -265,7 +265,7 @@ export default function ExpensesPage() {
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
               onClick={(e) => e.currentTarget.showPicker?.()}
-              className="rounded-xl border border-surface-800 bg-surface-900/50 py-2 px-3 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all cursor-pointer [color-scheme:dark]"
+              className="rounded-xl border border-surface-800 bg-surface-900/50 py-2 px-3 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all cursor-pointer scheme:dark"
             />
           </div>
           {(dateFrom || dateTo) && (

@@ -181,7 +181,7 @@ export default function CreateExpensePage() {
                 value={expenseDate}
                 onChange={(e) => setExpenseDate(e.target.value)}
                 onClick={(e) => e.currentTarget.showPicker?.()}
-                className={`${inputClass} cursor-pointer [color-scheme:dark]`}
+                className={`${inputClass} cursor-pointer scheme:dark`}
                 required
               />
             </div>
