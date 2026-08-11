@@ -44,6 +44,7 @@ export default function DamageInspectionsPage() {
       const text = [
         item.car?.brand,
         item.car?.modelName,
+        item.licensePlate,
         item.user?.name,
         item.user?.email,
         item.damageType,
@@ -60,13 +61,14 @@ export default function DamageInspectionsPage() {
       header: 'Vehicle',
       cell: ({ row }: any) => {
         const car = row.original.car
+        const licensePlate = row.original.licensePlate
         return (
           <div className="flex flex-col">
             <span className="font-bold text-surface-50 capitalize">
               {car?.brand} {car?.modelName}
             </span>
             <span className="text-[10px] text-surface-500 font-medium">
-              {car?.year}
+              {car?.year} {licensePlate ? `• Plate: ${licensePlate}` : ''}
             </span>
           </div>
         )
@@ -74,14 +76,14 @@ export default function DamageInspectionsPage() {
     },
     {
       accessorKey: 'user',
-      header: 'Customer',
+      header: 'Customer / User',
       cell: ({ row }: any) => (
         <div className="flex flex-col">
           <span className="font-bold text-surface-50">
-            {row.original.user?.name || 'Unknown User'}
+            {row.original.user?.name || 'Admin Logged'}
           </span>
           <span className="text-[10px] text-surface-500 font-medium">
-            {row.original.user?.email || 'No Email'}
+            {row.original.user?.email || 'N/A'}
           </span>
         </div>
       ),
@@ -141,12 +143,15 @@ export default function DamageInspectionsPage() {
     },
     {
       accessorKey: 'createdAt',
-      header: 'Reported Date',
-      cell: ({ row }: any) => (
-        <span className="text-xs text-surface-500 font-medium">
-          {new Date(row.original.createdAt).toLocaleDateString()}
-        </span>
-      ),
+      header: 'Inspection Date',
+      cell: ({ row }: any) => {
+        const dateVal = row.original.inspectionDate || row.original.createdAt
+        return (
+          <span className="text-xs text-surface-500 font-medium">
+            {dateVal ? new Date(dateVal).toLocaleDateString() : 'N/A'}
+          </span>
+        )
+      },
     },
     {
       id: 'actions',

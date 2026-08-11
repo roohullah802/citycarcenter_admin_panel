@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { useRouter } from 'next/navigation'
 import { Loader2, ArrowLeft, X, ShieldAlert, UploadCloud } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
+import { useCars } from '@/hooks/useCars'
 
 const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!
 const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!
@@ -15,7 +16,10 @@ export default function CreateDamageInspectionPage() {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  // Fetch active and past leases so admin can attach inspection to a lease
+  // Fetch cars dynamically from DB
+  const { getCars } = useCars()
+
+  // Fetch leases to optionally match car with active lease
   const getLeases = useQuery({
     queryKey: ['leases'],
     queryFn: async () => {
@@ -24,12 +28,17 @@ export default function CreateDamageInspectionPage() {
     },
   })
 
-  const [selectedLeaseId, setSelectedLeaseId] = useState('')
-  const [damageType, setDamageType] = useState('scratch')
+  const todayStr = new Date().toISOString().split('T')[0]
+
+  // Form states
+  const [selectedCarId, setSelectedCarId] = useState('')
+  const [inspectionDate, setInspectionDate] = useState(todayStr)
+  const [licensePlate, setLicensePlate] = useState('')
+  const [damageCategory, setDamageCategory] = useState('scratch')
+  const [customCategory, setCustomCategory] = useState('')
   const [severity, setSeverity] = useState('minor')
-  const [estimatedCost, setEstimatedCost] = useState(0)
+  const [estimatedCost, setEstimatedCost] = useState('')
   const [description, setDescription] = useState('')
-  const [notes, setNotes] = useState('')
 
   // Images state
   const [pendingImages, setPendingImages] = useState<File[]>([])
@@ -77,10 +86,16 @@ export default function CreateDamageInspectionPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!selectedLeaseId) {
-      toast.error('Please select a lease')
+    if (!selectedCarId) {
+      toast.error('Please select a car')
       return
     }
+
+    if (damageCategory === 'other' && !customCategory.trim()) {
+      toast.error('Please specify the custom damage category')
+      return
+    }
+
     if (!description || description.length < 5) {
       toast.error('Description must be at least 5 characters')
       return
@@ -89,6 +104,13 @@ export default function CreateDamageInspectionPage() {
       toast.error('Please upload at least one photo of the damage')
       return
     }
+
+    // Determine final damage type (custom if 'other' was selected)
+    const finalDamageType = damageCategory === 'other' ? customCategory.trim() : damageCategory
+
+    // Find optional lease for selected car if available
+    const leasesList = getLeases.data?.data || []
+    const matchingLease = leasesList.find((l: any) => l.car?._id === selectedCarId || l.car === selectedCarId)
 
     setIsSubmitting(true)
     try {
@@ -102,12 +124,14 @@ export default function CreateDamageInspectionPage() {
 
       setUploadProgress('Recording inspection...')
       await api.post('/admin/damage-inspections', {
-        leaseId: selectedLeaseId,
-        damageType,
+        carId: selectedCarId,
+        leaseId: matchingLease?._id,
+        licensePlate: licensePlate.trim(),
+        inspectionDate,
+        damageType: finalDamageType,
         severity,
-        estimatedCost: Number(estimatedCost),
+        estimatedCost: estimatedCost ? Number(estimatedCost) : 0,
         description,
-        notes,
         images: uploadedImages,
       })
 
@@ -125,7 +149,7 @@ export default function CreateDamageInspectionPage() {
 
   const inputClass = "block w-full rounded-xl border border-surface-800 bg-surface-900/50 py-3 px-4 text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all placeholder:text-surface-700"
 
-  const leases = getLeases.data?.data || []
+  const cars = getCars.data || []
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-10">
@@ -151,36 +175,61 @@ export default function CreateDamageInspectionPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
-            {/* Select Lease */}
+            {/* 1st Field: Car Name Dropdown (Dynamic from DB) */}
             <div className="space-y-2 sm:col-span-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Associated Lease / Rental *</label>
-              {getLeases.isLoading ? (
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Car Name *</label>
+              {getCars.isLoading ? (
                 <div className="flex items-center gap-2 text-surface-500 text-sm py-3">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Loading leases...
+                  <Loader2 className="h-4 w-4 animate-spin" /> Loading cars from database...
                 </div>
               ) : (
                 <select
-                  value={selectedLeaseId}
-                  onChange={(e) => setSelectedLeaseId(e.target.value)}
+                  value={selectedCarId}
+                  onChange={(e) => setSelectedCarId(e.target.value)}
                   className={inputClass}
                   required
                 >
-                  <option value="">Select a lease record...</option>
-                  {leases.map((lease: any) => (
-                    <option key={lease._id} value={lease._id}>
-                      {lease.car?.brand} {lease.car?.modelName} — {lease.user?.name} ({new Date(lease.startDate).toLocaleDateString()} to {new Date(lease.endDate).toLocaleDateString()})
+                  <option value="">Select a car from database...</option>
+                  {cars.map((car: any) => (
+                    <option key={car._id} value={car._id}>
+                      {car.brand} {car.modelName} ({car.year}) — {car.color || 'No Color'}
                     </option>
                   ))}
                 </select>
               )}
             </div>
 
-            {/* Damage Type */}
+            {/* 2nd Field: Inspection Date */}
             <div className="space-y-2">
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Inspection Date *</label>
+              <input
+                type="date"
+                value={inspectionDate}
+                onChange={(e) => setInspectionDate(e.target.value)}
+                className={inputClass}
+                required
+              />
+            </div>
+
+            {/* 3rd Field: License Number */}
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">License Number *</label>
+              <input
+                type="text"
+                value={licensePlate}
+                onChange={(e) => setLicensePlate(e.target.value)}
+                placeholder="Enter vehicle license plate..."
+                className={inputClass}
+                required
+              />
+            </div>
+
+            {/* 4th Field: Damage Category */}
+            <div className="space-y-2 sm:col-span-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Damage Category *</label>
               <select
-                value={damageType}
-                onChange={(e) => setDamageType(e.target.value)}
+                value={damageCategory}
+                onChange={(e) => setDamageCategory(e.target.value)}
                 className={inputClass}
               >
                 <option value="scratch">Scratch</option>
@@ -191,9 +240,24 @@ export default function CreateDamageInspectionPage() {
                 <option value="glass">Glass / Windshield</option>
                 <option value="other">Other</option>
               </select>
+
+              {/* Conditional Manual Field when "Other" is selected */}
+              {damageCategory === 'other' && (
+                <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <label className="block text-xs font-bold text-brand-400 uppercase tracking-wider mb-1.5">Specify Custom Category *</label>
+                  <input
+                    type="text"
+                    value={customCategory}
+                    onChange={(e) => setCustomCategory(e.target.value)}
+                    placeholder="Type custom damage category..."
+                    className={inputClass}
+                    required
+                  />
+                </div>
+              )}
             </div>
 
-            {/* Severity */}
+            {/* 5th Field: Severity Level */}
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Severity Level *</label>
               <select
@@ -207,15 +271,15 @@ export default function CreateDamageInspectionPage() {
               </select>
             </div>
 
-            {/* Estimated Repair Cost */}
-            <div className="space-y-2 sm:col-span-2">
+            {/* 6th Field: Estimated Repair Cost */}
+            <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Estimated Repair Cost ($)</label>
               <input
                 type="number"
                 min="0"
                 value={estimatedCost}
-                onChange={(e) => setEstimatedCost(Number(e.target.value))}
-                placeholder="0"
+                onChange={(e) => setEstimatedCost(e.target.value)}
+                placeholder="e.g. 250"
                 className={inputClass}
               />
             </div>
@@ -227,21 +291,9 @@ export default function CreateDamageInspectionPage() {
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Detailed description of the damage found during return inspection..."
+                placeholder="Detailed description of the damage found during inspection..."
                 className={`${inputClass} resize-none`}
                 required
-              />
-            </div>
-
-            {/* Additional Notes */}
-            <div className="space-y-2 sm:col-span-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Internal Notes (Optional)</label>
-              <textarea
-                rows={3}
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Additional notes for insurance or internal record..."
-                className={`${inputClass} resize-none`}
               />
             </div>
           </div>
