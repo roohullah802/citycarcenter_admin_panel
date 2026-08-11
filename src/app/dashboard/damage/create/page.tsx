@@ -70,7 +70,7 @@ export default function CreateDamageInspectionPage() {
     formData.append('token', token)
     formData.append('useUniqueFileName', 'true')
 
-    const uploadRes = await fetch(`${urlEndpoint}/api/v1/files/upload`, {
+    const uploadRes = await fetch('https://upload.imagekit.io/api/v1/files/upload', {
       method: 'POST',
       body: formData
     })
