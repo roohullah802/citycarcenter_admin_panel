@@ -56,19 +56,27 @@ export default function UsersPage() {
       accessorKey: 'avatar',
       header: 'User',
       cell: ({ row }) => (
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-surface-800 overflow-hidden flex items-center justify-center border border-surface-700">
+        <div
+          onClick={() => router.push(`/dashboard/users/${row.original._id}`)}
+          className="flex items-center gap-3 cursor-pointer group/user py-1"
+          title="Click to view details"
+        >
+          <div className="h-10 w-10 rounded-xl bg-surface-800 overflow-hidden flex items-center justify-center border border-surface-700 group-hover/user:border-brand-500/50 transition-colors">
             {row.original.avatar ? (
               <img src={row.original.avatar} alt="avatar" className="h-full w-full object-cover" />
             ) : (
-              <span className="text-surface-400 font-bold text-xs">
+              <span className="text-surface-400 font-bold text-xs group-hover/user:text-brand-400 transition-colors">
                 {row.original.name?.charAt(0).toUpperCase() || '?'}
               </span>
             )}
           </div>
           <div className="flex flex-col">
-            <span className="font-bold text-surface-50 leading-none">{row.original.name}</span>
-            <span className="text-[10px] font-medium text-surface-500 mt-1 uppercase tracking-wider">{row.original.role || 'User'}</span>
+            <span className="font-bold text-surface-50 group-hover/user:text-brand-400 transition-colors leading-none">
+              {row.original.name}
+            </span>
+            <span className="text-[10px] font-medium text-surface-500 mt-1 uppercase tracking-wider">
+              {row.original.role || 'User'}
+            </span>
           </div>
         </div>
       ),
@@ -121,6 +129,7 @@ export default function UsersPage() {
             <button
               onClick={() => router.push(`/dashboard/users/${row.original._id}`)}
               className="p-2 text-surface-400 hover:text-brand-400 hover:bg-brand-500/10 rounded-lg transition-all"
+              title="View Details"
             >
               <Eye className="h-4 w-4" />
             </button>
@@ -167,7 +176,8 @@ export default function UsersPage() {
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              className="rounded-xl border border-surface-800 bg-surface-900/50 py-2 px-3 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all"
+              onClick={(e) => e.currentTarget.showPicker?.()}
+              className="rounded-xl border border-surface-800 bg-surface-900/50 py-2 px-3 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all cursor-pointer [color-scheme:dark]"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -176,7 +186,8 @@ export default function UsersPage() {
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
-              className="rounded-xl border border-surface-800 bg-surface-900/50 py-2 px-3 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all"
+              onClick={(e) => e.currentTarget.showPicker?.()}
+              className="rounded-xl border border-surface-800 bg-surface-900/50 py-2 px-3 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all cursor-pointer [color-scheme:dark]"
             />
           </div>
           {(dateFrom || dateTo) && (
@@ -212,7 +223,6 @@ export default function UsersPage() {
         <DataTable
           columns={columns}
           data={filteredUsers}
-          onRowClick={(row: any) => router.push(`/dashboard/users/${row._id}`)}
         />
       )}
     </div>
