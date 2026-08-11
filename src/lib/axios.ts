@@ -11,6 +11,21 @@ export const api = axios.create({
   },
 });
 
+// Dynamic request interceptor: Ensures every API request contains a valid Clerk token
+api.interceptors.request.use(async (config) => {
+  if (!config.headers['Authorization'] && typeof window !== 'undefined' && (window as any).Clerk?.session) {
+    try {
+      const token = await (window as any).Clerk.session.getToken();
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+    } catch (err) {
+      console.error('Failed to attach Clerk token in request interceptor:', err);
+    }
+  }
+  return config;
+});
+
 export const setAuthToken = (token: string | null) => {
   if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
