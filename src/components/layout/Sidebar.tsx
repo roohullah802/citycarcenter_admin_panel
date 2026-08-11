@@ -22,7 +22,6 @@ const navigation = [
   { name: 'Cars Fleet', href: '/dashboard/cars', icon: Car },
   { name: 'Users', href: '/dashboard/users', icon: Users },
   { name: 'Leases & Transactions', href: '/dashboard/leases', icon: ReceiptText },
-  { name: 'Expenses', href: '/dashboard/expenses', icon: Wallet },
   { name: 'Damage Inspections', href: '/dashboard/damage', icon: ShieldAlert },
   { name: 'Document Verification', href: '/dashboard/documents', icon: FileCheck2 },
   { name: 'Complaints', href: '/dashboard/complaints', icon: AlertTriangle },

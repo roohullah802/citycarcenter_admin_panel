@@ -43,14 +43,9 @@ export default function LeasesPage() {
     },
   })
 
-  // Dynamic calculations: Net Profit = Gross Profit - Expenses
+  // Dynamic calculations: Total Revenue & Total Transactions
   const rawStats = getLeases.data?.stats || {}
-  const grossProfit = rawStats.grossProfit ?? rawStats.totalRevenue ?? 0
-  const loggedExpenses = rawStats.loggedExpenses ?? 0
-  const damageExpenses = rawStats.damageExpenses ?? 0
-  const stripeFees = rawStats.totalStripeFees ?? 0
-  const totalExpenses = rawStats.totalExpenses ?? (loggedExpenses + damageExpenses + stripeFees)
-  const netProfit = rawStats.netProfit ?? (grossProfit - totalExpenses)
+  const totalRevenue = rawStats.totalRevenue ?? rawStats.grossProfit ?? 0
   const totalTransactions = rawStats.totalTransactions ?? (getLeases.data?.data || []).length
 
   const columns: ColumnDef<any>[] = [
@@ -141,13 +136,13 @@ export default function LeasesPage() {
             Leases & Transactions
           </h2>
           <p className="mt-2 text-surface-400 font-medium">
-            Monitor fleet utilization, expenses, gross and net financial performance.
+            Monitor fleet utilization and lease transaction activity.
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {/* Gross Profit (formerly Total Revenue) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+        {/* Total Revenue */}
         <div className="bg-card border border-surface-800/50 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
           <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500">
             <TrendingUp className="h-24 w-24 text-emerald-400" />
@@ -156,40 +151,10 @@ export default function LeasesPage() {
             <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400">
               <TrendingUp className="h-5 w-5" />
             </div>
-            <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Gross Profit</p>
+            <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Total Revenue</p>
           </div>
-          <p className="text-3xl font-bold text-emerald-400 tracking-tight">${grossProfit.toLocaleString()}</p>
+          <p className="text-3xl font-bold text-emerald-400 tracking-tight">${totalRevenue.toLocaleString()}</p>
           <p className="text-[10px] text-surface-500 mt-2">Total gross revenue from leases</p>
-        </div>
-
-        {/* Total Expenses */}
-        <div className="bg-card border border-surface-800/50 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
-          <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500">
-            <DollarSign className="h-24 w-24 text-rose-400" />
-          </div>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 rounded-xl bg-rose-500/10 text-rose-400">
-              <DollarSign className="h-5 w-5" />
-            </div>
-            <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Total Expenses</p>
-          </div>
-          <p className="text-3xl font-bold text-rose-400 tracking-tight">${totalExpenses.toLocaleString()}</p>
-          <p className="text-[10px] text-surface-500 mt-2">Logged: ${loggedExpenses.toLocaleString()} • Repairs: ${damageExpenses.toLocaleString()}</p>
-        </div>
-
-        {/* Net Profit (Gross Profit - Expenses) */}
-        <div className="bg-card border border-surface-800/50 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
-          <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500">
-            <Wallet className="h-24 w-24 text-brand-400" />
-          </div>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 rounded-xl bg-brand-500/10 text-brand-400">
-              <Wallet className="h-5 w-5" />
-            </div>
-            <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Net Profit</p>
-          </div>
-          <p className="text-3xl font-bold text-brand-400 tracking-tight">${netProfit.toLocaleString()}</p>
-          <p className="text-[10px] text-surface-500 mt-2">Calculated: Gross Profit − Expenses</p>
         </div>
 
         {/* Transactions */}
