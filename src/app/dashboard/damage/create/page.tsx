@@ -130,7 +130,7 @@ export default function CreateDamageInspectionPage() {
         inspectionDate,
         damageType: finalDamageType,
         severity,
-        estimatedCost: estimatedCost ? Number(estimatedCost) : 0,
+        estimatedCost: estimatedCost ? (parseFloat(estimatedCost.replace(/[^0-9.]/g, '')) || 0) : 0,
         description,
         images: uploadedImages,
       })
@@ -206,7 +206,8 @@ export default function CreateDamageInspectionPage() {
                 type="date"
                 value={inspectionDate}
                 onChange={(e) => setInspectionDate(e.target.value)}
-                className={inputClass}
+                onClick={(e) => e.currentTarget.showPicker?.()}
+                className={`${inputClass} cursor-pointer [color-scheme:dark]`}
                 required
               />
             </div>
@@ -275,8 +276,7 @@ export default function CreateDamageInspectionPage() {
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Estimated Repair Cost ($)</label>
               <input
-                type="number"
-                min="0"
+                type="text"
                 value={estimatedCost}
                 onChange={(e) => setEstimatedCost(e.target.value)}
                 placeholder="e.g. 250"
