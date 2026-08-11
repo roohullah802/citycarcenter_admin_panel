@@ -23,6 +23,7 @@ const navigation = [
   { name: 'Users', href: '/dashboard/users', icon: Users },
   { name: 'Leases & Transactions', href: '/dashboard/leases', icon: ReceiptText },
   { name: 'Damage Inspections', href: '/dashboard/damage', icon: ShieldAlert },
+  { name: 'Expenses', href: '/dashboard/expenses', icon: Wallet },
   { name: 'Document Verification', href: '/dashboard/documents', icon: FileCheck2 },
   { name: 'Complaints', href: '/dashboard/complaints', icon: AlertTriangle },
   { name: 'Content Management', href: '/dashboard/content', icon: FileText },
