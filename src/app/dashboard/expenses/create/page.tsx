@@ -4,13 +4,13 @@ import { useState, useRef, useCallback } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { useRouter } from 'next/navigation'
-import { Loader2, ArrowLeft, X, Wallet, UploadCloud } from 'lucide-react'
+import { Loader2, ArrowLeft, X, Wallet, UploadCloud, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { useCars } from '@/hooks/useCars'
 
-const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!
-const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!
+const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || ''
+const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || ''
 
 export default function CreateExpensePage() {
   const router = useRouter()
@@ -38,6 +38,10 @@ export default function CreateExpensePage() {
   const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error('File size exceeds 10MB limit')
+        return
+      }
       setPendingReceipt(file)
     }
     e.target.value = ''
@@ -83,8 +87,8 @@ export default function CreateExpensePage() {
     }
 
     const parsedAmount = parseFloat(amount.replace(/[^0-9.]/g, ''))
-    if (!parsedAmount || parsedAmount <= 0) {
-      toast.error('Please enter a valid expense amount')
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      toast.error('Please enter a valid expense amount greater than 0')
       return
     }
 
@@ -99,7 +103,7 @@ export default function CreateExpensePage() {
         uploadedReceipt = await uploadToImageKit(pendingReceipt)
       }
 
-      setUploadProgress('Saving expense...')
+      setUploadProgress('Saving expense record...')
       await api.post('/admin/expenses', {
         carId: selectedCarId.trim() ? selectedCarId.trim() : undefined,
         category: finalCategory,
@@ -111,38 +115,46 @@ export default function CreateExpensePage() {
 
       queryClient.invalidateQueries({ queryKey: ['expenses'] })
       queryClient.invalidateQueries({ queryKey: ['leases'] })
-      toast.success('Expense logged successfully')
+      queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] })
+
+      toast.success('Expense logged successfully!')
       router.push('/dashboard/expenses')
     } catch (error: any) {
       console.error('Expense submit error:', error)
-      toast.error(error?.response?.data?.message || error.message || 'Failed to log expense')
+      toast.error(error?.response?.data?.message || error.message || 'Failed to log expense record')
     } finally {
       setIsSubmitting(false)
       setUploadProgress('')
     }
   }
 
-  const inputClass = "block w-full rounded-xl border border-surface-800 bg-surface-900/50 py-3 px-4 text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all placeholder:text-surface-700"
+  const inputClass = "block w-full rounded-xl border border-surface-800 bg-surface-900/50 py-3 px-4 text-sm text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all placeholder:text-surface-600 font-medium"
 
   const cars = getCars.data || []
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-10">
+      {/* Header */}
       <div className="flex items-center gap-4">
-        <Link href="/dashboard/expenses" className="p-2.5 rounded-xl bg-surface-900 border border-surface-800 text-surface-400 hover:text-surface-100 transition-all">
+        <Link 
+          href="/dashboard/expenses" 
+          className="p-2.5 rounded-xl bg-surface-900 border border-surface-800 text-surface-400 hover:text-surface-100 transition-all"
+        >
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-surface-50">
             Log New Expense
           </h2>
-          <p className="text-surface-400 font-medium">Record vehicle maintenance, repairs, fuel, or business operational costs.</p>
+          <p className="text-surface-400 font-medium text-sm">
+            Record vehicle maintenance, repairs, fuel, insurance, or operational costs.
+          </p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-8">
         <div className="bg-card border border-surface-800/50 rounded-2xl p-8 shadow-sm">
-          <div className="flex items-center gap-3 mb-8">
+          <div className="flex items-center gap-3 mb-8 pb-4 border-b border-surface-800/50">
             <div className="p-2.5 rounded-xl bg-brand-500/10 text-brand-400">
               <Wallet className="h-5 w-5" />
             </div>
@@ -150,12 +162,14 @@ export default function CreateExpensePage() {
           </div>
 
           <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
-            {/* 1st Field: Vehicle Selection */}
+            {/* Vehicle Selection */}
             <div className="space-y-2 sm:col-span-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Vehicle (Optional)</label>
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">
+                Vehicle (Optional)
+              </label>
               {getCars.isLoading ? (
                 <div className="flex items-center gap-2 text-surface-500 text-sm py-3">
-                  <Loader2 className="h-4 w-4 animate-spin" /> Loading cars from database...
+                  <Loader2 className="h-4 w-4 animate-spin text-brand-500" /> Loading cars...
                 </div>
               ) : (
                 <select
@@ -166,16 +180,18 @@ export default function CreateExpensePage() {
                   <option value="">General Business Expense (Non-Vehicle Specific)</option>
                   {cars.map((car: any) => (
                     <option key={car._id} value={car._id}>
-                      {car.brand} {car.modelName} ({car.year}) — {car.color || 'No Color'}
+                      {car.brand} {car.modelName} ({car.year}) — {car.color || 'Standard'}
                     </option>
                   ))}
                 </select>
               )}
             </div>
 
-            {/* 2nd Field: Expense Date */}
+            {/* Expense Date */}
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Expense Date *</label>
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">
+                Expense Date *
+              </label>
               <input
                 type="date"
                 value={expenseDate}
@@ -186,9 +202,11 @@ export default function CreateExpensePage() {
               />
             </div>
 
-            {/* 3rd Field: Expense Category */}
+            {/* Expense Category */}
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Expense Category *</label>
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">
+                Expense Category *
+              </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -199,18 +217,19 @@ export default function CreateExpensePage() {
                 <option value="fuel">Fuel / Gas</option>
                 <option value="insurance">Insurance</option>
                 <option value="wash">Vehicle Wash & Detailing</option>
-                <option value="other">Other</option>
+                <option value="other">Other (Custom Category)</option>
               </select>
 
-              {/* Conditional Manual Field when "Other" is selected */}
               {category === 'other' && (
                 <div className="mt-3 animate-in fade-in slide-in-from-top-2 duration-200">
-                  <label className="block text-xs font-bold text-brand-400 uppercase tracking-wider mb-1.5">Specify Custom Category *</label>
+                  <label className="block text-xs font-bold text-brand-400 uppercase tracking-wider mb-1.5">
+                    Specify Custom Category *
+                  </label>
                   <input
                     type="text"
                     value={customCategory}
                     onChange={(e) => setCustomCategory(e.target.value)}
-                    placeholder="Type custom expense category..."
+                    placeholder="e.g. License Renewal, Detailing Equipment..."
                     className={inputClass}
                     required
                   />
@@ -218,46 +237,63 @@ export default function CreateExpensePage() {
               )}
             </div>
 
-            {/* 4th Field: Expense Amount */}
+            {/* Amount */}
             <div className="space-y-2 sm:col-span-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Amount ($) *</label>
-              <input
-                type="text"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="e.g. 150.00"
-                className={inputClass}
-                required
-              />
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">
+                Amount ($) *
+              </label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-surface-500 font-bold text-base">
+                  $
+                </span>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0.00"
+                  className={`${inputClass} pl-8`}
+                  required
+                />
+              </div>
             </div>
 
-            {/* 5th Field: Description */}
+            {/* Description */}
             <div className="space-y-2 sm:col-span-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Description / Notes</label>
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">
+                Description / Notes
+              </label>
               <textarea
                 rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Provide details about this expense (e.g. Oil change and brake pad replacement)..."
+                placeholder="Provide detailed notes regarding this expense (e.g. Oil filter replacement and tire rotation)..."
                 className={`${inputClass} resize-none`}
               />
             </div>
           </div>
         </div>
 
-        {/* Receipt Proof Upload (Optional) */}
+        {/* Receipt Upload */}
         <div className="bg-card border border-surface-800/50 rounded-2xl p-8 shadow-sm">
-          <h3 className="text-sm font-bold text-surface-100 uppercase tracking-widest mb-6">Receipt / Invoice Proof (Optional)</h3>
+          <h3 className="text-sm font-bold text-surface-100 uppercase tracking-wider mb-4">
+            Receipt Proof / Invoice (Optional)
+          </h3>
 
           <div
-            className="relative border-2 border-dashed border-surface-800 rounded-2xl p-8 hover:bg-surface-900/50 hover:border-brand-500/50 transition-all flex flex-col items-center justify-center text-center cursor-pointer group shadow-inner bg-surface-900/20"
+            className="relative border-2 border-dashed border-surface-800 rounded-2xl p-8 hover:bg-surface-900/50 hover:border-brand-500/50 transition-all flex flex-col items-center justify-center text-center cursor-pointer group bg-surface-900/20"
             onClick={() => fileInputRef.current?.click()}
           >
             <div className="p-4 rounded-2xl bg-surface-800 text-surface-400 group-hover:text-brand-400 group-hover:bg-brand-500/10 transition-all mb-3 border border-surface-700">
               <UploadCloud className="h-7 w-7" />
             </div>
-            <p className="text-sm font-bold text-surface-200">Click to upload receipt photo or PDF</p>
-            <p className="text-xs text-surface-500 font-medium uppercase tracking-widest mt-1">PNG, JPG, WEBP up to 10MB</p>
+            <p className="text-sm font-bold text-surface-200">
+              Click or drag to upload receipt photo or PDF
+            </p>
+            <p className="text-xs text-surface-500 font-medium uppercase tracking-widest mt-1">
+              Supports PNG, JPG, WEBP up to 10MB
+            </p>
             <input
               ref={fileInputRef}
               type="file"
@@ -268,30 +304,54 @@ export default function CreateExpensePage() {
           </div>
 
           {pendingReceipt && (
-            <div className="mt-6 flex items-center justify-between p-4 bg-surface-900 border border-surface-800 rounded-xl">
+            <div className="mt-4 flex items-center justify-between p-4 bg-surface-900 border border-surface-800 rounded-xl">
               <div className="flex items-center gap-3 overflow-hidden">
-                <img src={URL.createObjectURL(pendingReceipt)} alt="receipt preview" className="h-12 w-12 object-cover rounded-lg border border-surface-700" />
+                <img
+                  src={URL.createObjectURL(pendingReceipt)}
+                  alt="receipt preview"
+                  className="h-12 w-12 object-cover rounded-lg border border-surface-700 shrink-0"
+                />
                 <div className="truncate">
                   <p className="text-sm font-bold text-surface-100 truncate">{pendingReceipt.name}</p>
                   <p className="text-xs text-surface-500">{(pendingReceipt.size / 1024).toFixed(1)} KB</p>
                 </div>
               </div>
-              <button type="button" onClick={removeReceipt} className="p-2 text-surface-400 hover:text-rose-400 transition-colors">
+              <button
+                type="button"
+                onClick={removeReceipt}
+                className="p-2 text-surface-400 hover:text-rose-400 transition-colors"
+                title="Remove image"
+              >
                 <X className="h-5 w-5" />
               </button>
             </div>
           )}
         </div>
 
-        {/* Submit */}
-        <div className="flex justify-end pt-4">
+        {/* Form Actions */}
+        <div className="flex items-center justify-end gap-4 pt-4">
+          <Link
+            href="/dashboard/expenses"
+            className="px-6 py-3 rounded-xl border border-surface-800 text-surface-300 hover:text-white text-sm font-bold transition-all"
+          >
+            Cancel
+          </Link>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="flex items-center justify-center gap-3 px-12 py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-2xl text-sm font-bold shadow-xl shadow-brand-900/20 transition-all disabled:opacity-50"
+            className="flex items-center justify-center gap-3 px-10 py-3.5 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-sm font-bold shadow-xl shadow-brand-900/20 transition-all disabled:opacity-50"
           >
-            {isSubmitting && <Loader2 className="h-5 w-5 animate-spin" />}
-            {uploadProgress || 'Save Expense'}
+            {isSubmitting ? (
+              <>
+                <Loader2 className="h-5 w-5 animate-spin" />
+                <span>{uploadProgress || 'Processing...'}</span>
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="h-5 w-5" />
+                <span>Save Expense Record</span>
+              </>
+            )}
           </button>
         </div>
       </form>
