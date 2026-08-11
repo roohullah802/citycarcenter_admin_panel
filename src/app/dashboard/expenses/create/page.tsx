@@ -101,7 +101,7 @@ export default function CreateExpensePage() {
 
       setUploadProgress('Saving expense...')
       await api.post('/admin/expenses', {
-        carId: selectedCarId || undefined,
+        carId: selectedCarId.trim() ? selectedCarId.trim() : undefined,
         category: finalCategory,
         amount: parsedAmount,
         date: expenseDate,

@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/axios'
 import { DataTable } from '@/components/ui/DataTable'
 import { ColumnDef } from '@tanstack/react-table'
-import { Loader2, Plus, Trash2, Wallet, DollarSign, SearchX, Calendar, X, FileText, Image as ImageIcon } from 'lucide-react'
+import { Loader2, Plus, Trash2, Wallet, DollarSign, SearchX, Calendar, X, FileText, Image as ImageIcon, AlertCircle, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import Link from 'next/link'
 import { useSearch } from '@/context/SearchContext'
@@ -181,6 +181,28 @@ export default function ExpensesPage() {
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-10 w-10 animate-spin text-brand-600" />
           <p className="text-sm font-medium text-surface-500 animate-pulse">Loading vehicle expenses...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (getExpenses.isError) {
+    const errorMsg = (getExpenses.error as any)?.response?.data?.message || 'Failed to load expense records'
+    return (
+      <div className="flex h-[60vh] items-center justify-center">
+        <div className="flex flex-col items-center gap-4 text-center max-w-md bg-card border border-rose-500/20 p-8 rounded-2xl">
+          <div className="p-3 rounded-full bg-rose-500/10 text-rose-400">
+            <AlertCircle className="h-8 w-8" />
+          </div>
+          <h3 className="text-lg font-bold text-surface-100">Unable to load expenses</h3>
+          <p className="text-sm text-surface-400">{errorMsg}</p>
+          <button
+            onClick={() => getExpenses.refetch()}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold rounded-xl transition-all"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Try Again
+          </button>
         </div>
       </div>
     )
