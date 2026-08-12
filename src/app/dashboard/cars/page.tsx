@@ -63,9 +63,6 @@ export default function CarsPage() {
       cell: ({ row }) => (
         <div className="flex flex-col">
           <span className="text-emerald-400 font-bold">${row.original.pricePerDay}</span>
-          {row.original.discountEnabled && row.original.discountPercentage > 0 && (
-            <span className="text-[10px] text-amber-400 font-bold">{row.original.discountPercentage}% OFF</span>
-          )}
         </div>
       ),
     },

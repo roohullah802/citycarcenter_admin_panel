@@ -42,8 +42,6 @@ interface CarFormValues {
   weeklyRate: number
   monthlyRate: number
   pricePerDay: number
-  discountPercentage: number
-  discountEnabled: boolean
   initialMileage: number
   allowedMilleage: number
   fuelType: 'petrol' | 'diesel' | 'electric' | 'hybrid'
@@ -63,8 +61,6 @@ export default function CreateCarPage() {
       fuelType: 'petrol',
       transmission: 'automatic',
       available: true,
-      discountPercentage: 0,
-      discountEnabled: false,
     }
   })
 
@@ -320,35 +316,9 @@ export default function CreateCarPage() {
               {errors.initialMileage && <p className="text-xs text-rose-400 font-medium mt-1">{errors.initialMileage.message}</p>}
             </div>
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Daily KM Allowance *</label>
-              <input type="number" {...register('allowedMilleage', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} className={errors.allowedMilleage ? errorInputClass : inputClass} />
-              {errors.allowedMilleage && <p className="text-xs text-rose-400 font-medium mt-1">{errors.allowedMilleage.message}</p>}
-            </div>
-            <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Service Tax (%) *</label>
               <input type="number" {...register('tax', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Min 0%' }, max: { value: 100, message: 'Max 100%' } })} className={errors.tax ? errorInputClass : inputClass} />
               {errors.tax && <p className="text-xs text-rose-400 font-medium mt-1">{errors.tax.message}</p>}
-            </div>
-          </div>
-        </div>
-
-        {/* Discount */}
-        <div className="bg-card border border-surface-800/50 rounded-2xl p-8 shadow-sm">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="p-2.5 rounded-xl bg-amber-500/10 text-amber-400">
-              <Percent className="h-5 w-5" />
-            </div>
-            <h3 className="text-xl font-bold text-surface-50 tracking-tight">Discount Settings</h3>
-          </div>
-          <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
-            <div className="space-y-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Discount Percentage (%)</label>
-              <input type="number" {...register('discountPercentage', { valueAsNumber: true, min: { value: 0, message: 'Min 0%' }, max: { value: 100, message: 'Max 100%' } })} placeholder="0" className={inputClass} />
-              {errors.discountPercentage && <p className="text-xs text-rose-400 font-medium mt-1">{errors.discountPercentage.message}</p>}
-            </div>
-            <div className="flex items-center gap-3 pt-4">
-              <input type="checkbox" {...register('discountEnabled')} className="h-5 w-5 rounded-lg border-surface-800 bg-surface-900 text-amber-600 focus:ring-amber-500/20" />
-              <label className="text-sm font-bold text-surface-200">Enable Discount for Customers</label>
             </div>
           </div>
         </div>
@@ -396,11 +366,6 @@ export default function CreateCarPage() {
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">HP / Max Power *</label>
               <input type="number" {...register('maxPower', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Required' } })} className={errors.maxPower ? errorInputClass : inputClass} />
               {errors.maxPower && <p className="text-xs text-rose-400 font-medium mt-1">{errors.maxPower.message}</p>}
-            </div>
-            <div className="space-y-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">0-100 KM/H (s) *</label>
-              <input type="number" {...register('mph', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} step="0.1" className={errors.mph ? errorInputClass : inputClass} />
-              {errors.mph && <p className="text-xs text-rose-400 font-medium mt-1">{errors.mph.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Top Speed (KM/H) *</label>

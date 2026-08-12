@@ -315,7 +315,7 @@ export default function CreateExpensePage() {
               <div className="space-y-4">
                 <label className="text-sm font-bold text-surface-200 flex items-center gap-2">
                   <ImagePlus className="h-4 w-4 text-brand-400" />
-                  Receipt / Image Upload *
+                  Receipt / Image Upload <span className="text-rose-500">*</span>
                 </label>
 
                 {imagePreview ? (
