@@ -177,7 +177,7 @@ export default function CreateDamageInspectionPage() {
           <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
             {/* 1st Field: Car Name Dropdown (Dynamic from DB) */}
             <div className="space-y-2 sm:col-span-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Car Name *</label>
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Select Vehicle *</label>
               {getCars.isLoading ? (
                 <div className="flex items-center gap-2 text-surface-500 text-sm py-3">
                   <Loader2 className="h-4 w-4 animate-spin" /> Loading cars from database...
