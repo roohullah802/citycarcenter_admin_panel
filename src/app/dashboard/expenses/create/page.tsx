@@ -56,7 +56,7 @@ export default function CreateExpensePage() {
     queryKey: ['cars'],
     queryFn: async () => {
       const res = await api.get('/admin/cars/stats')
-      return res.data.cars
+      return res.data.data
     },
   })
 
