@@ -289,7 +289,7 @@ export default function CreateExpensePage() {
                   </option>
                   {!isLoadingCars && carsData?.map((car: any) => (
                     <option key={car._id} value={car._id} className="bg-surface-900">
-                      {car.brand} {car.modelName} ({car.licensePlate})
+                      {car.year} {car.brand} {car.modelName} ({car.color})
                     </option>
                   ))}
                 </select>
