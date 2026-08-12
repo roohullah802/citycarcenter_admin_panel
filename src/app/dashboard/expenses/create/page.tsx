@@ -25,7 +25,6 @@ const EXPENSE_CATEGORIES = [
   'REPAIR',
   'FUEL',
   'INSURANCE',
-  'OFFICE',
   'OTHER'
 ]
 
@@ -43,7 +42,7 @@ export default function CreateExpensePage() {
   const [category, setCategory] = useState('OTHER')
   const [selectedCarId, setSelectedCarId] = useState('')
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
-  
+
   // Image State
   const [receiptImage, setReceiptImage] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
@@ -107,7 +106,7 @@ export default function CreateExpensePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const numAmount = parseFloat(amount.replace(/[^0-9.]/g, ''))
     if (isNaN(numAmount) || numAmount <= 0) {
       toast.error("Please enter a valid amount")
@@ -127,7 +126,7 @@ export default function CreateExpensePage() {
     setIsSubmitting(true)
     try {
       let receiptData = null
-      
+
       if (receiptImage) {
         setUploadProgress('Uploading receipt image...')
         receiptData = await uploadToImageKit(receiptImage)
@@ -160,7 +159,7 @@ export default function CreateExpensePage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6 pb-20">
       <div className="flex items-center gap-4">
-        <Link 
+        <Link
           href="/dashboard/expenses"
           className="p-2 rounded-xl bg-surface-900 border border-surface-800 text-surface-400 hover:text-white hover:bg-surface-800 transition-colors"
         >
@@ -182,7 +181,7 @@ export default function CreateExpensePage() {
           {/* Left Column - Main Details */}
           <div className="space-y-6">
             <div className="p-6 rounded-2xl border border-surface-800/50 bg-surface-900/50 backdrop-blur-xl shadow-2xl space-y-6">
-              
+
               <div className="space-y-4">
                 <label className="text-sm font-bold text-surface-200 flex items-center gap-2">
                   <DollarSign className="h-4 w-4 text-brand-400" />
@@ -217,7 +216,7 @@ export default function CreateExpensePage() {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                  placeholder="e.g. Monthly Office Supplies, Oil Change..."
+                  placeholder="e.g. Oil Change..."
                 />
               </div>
 
@@ -277,7 +276,7 @@ export default function CreateExpensePage() {
           {/* Right Column - Related To & Receipt */}
           <div className="space-y-6">
             <div className="p-6 rounded-2xl border border-surface-800/50 bg-surface-900/50 backdrop-blur-xl shadow-2xl space-y-6">
-              
+
               <div className="space-y-4">
                 <label className="text-sm font-bold text-surface-200 flex items-center gap-2">
                   <Car className="h-4 w-4 text-brand-400" />
@@ -318,12 +317,12 @@ export default function CreateExpensePage() {
                   <ImagePlus className="h-4 w-4 text-brand-400" />
                   Receipt / Image Upload (Optional)
                 </label>
-                
+
                 {imagePreview ? (
                   <div className="relative rounded-2xl border border-surface-800 overflow-hidden bg-surface-950">
-                    <img 
-                      src={imagePreview} 
-                      alt="Receipt preview" 
+                    <img
+                      src={imagePreview}
+                      alt="Receipt preview"
                       className="w-full h-48 object-contain"
                     />
                     <button
@@ -369,9 +368,8 @@ export default function CreateExpensePage() {
         <div className="flex flex-col sm:flex-row items-center justify-end gap-4 p-6 rounded-2xl border border-surface-800/50 bg-surface-900/50 backdrop-blur-xl shadow-2xl">
           <Link
             href="/dashboard/expenses"
-            className={`w-full sm:w-auto px-6 py-3 bg-surface-800 text-white font-bold rounded-xl transition-colors text-center ${
-              isSubmitting ? 'opacity-50 pointer-events-none' : 'hover:bg-surface-700'
-            }`}
+            className={`w-full sm:w-auto px-6 py-3 bg-surface-800 text-white font-bold rounded-xl transition-colors text-center ${isSubmitting ? 'opacity-50 pointer-events-none' : 'hover:bg-surface-700'
+              }`}
           >
             Cancel
           </Link>
