@@ -92,19 +92,14 @@ export function TopBar() {
                   placeholder={`Search ${pathname.split('/').pop()?.replace('-', ' ') || 'records'}...`}
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                  {localSearch ? (
-                    <button
-                      onClick={clearSearch}
-                      className="p-1 rounded-md hover:bg-surface-800 text-surface-500 transition-colors"
-                    >
-                      <X className="h-3.5 w-3.5" />
-                    </button>
-                  ) : (
-                    <div className="flex items-center gap-1 px-1.5 py-0.5 rounded border border-surface-800 bg-surface-900 text-[10px] font-medium text-surface-400 pointer-events-none">
-                      <Command className="h-3 w-3" />
-                      <span>K</span>
-                    </div>
-                  )}
+
+                  <button
+                    onClick={clearSearch}
+                    className="p-1 rounded-md hover:bg-surface-800 text-surface-500 transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+
                 </div>
               </div>
 
