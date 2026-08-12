@@ -214,12 +214,12 @@ export default function CreateDamageInspectionPage() {
 
             {/* 3rd Field: License Number */}
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">License Number *</label>
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Driver License Number *</label>
               <input
                 type="text"
                 value={licensePlate}
                 onChange={(e) => setLicensePlate(e.target.value)}
-                placeholder="Enter vehicle license plate..."
+                placeholder="Person License Number..."
                 className={inputClass}
                 required
               />
