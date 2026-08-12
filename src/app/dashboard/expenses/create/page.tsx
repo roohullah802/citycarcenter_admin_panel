@@ -39,6 +39,7 @@ export default function CreateExpensePage() {
   // Form State
   const [amount, setAmount] = useState('')
   const [description, setDescription] = useState('')
+  const [repairDetails, setRepairDetails] = useState('')
   const [category, setCategory] = useState('OTHER')
   const [selectedCarId, setSelectedCarId] = useState('')
   const [date, setDate] = useState(new Date().toISOString().split('T')[0])
@@ -118,6 +119,11 @@ export default function CreateExpensePage() {
       return
     }
 
+    if (!selectedCarId) {
+      toast.error("Please select a vehicle")
+      return
+    }
+
     setIsSubmitting(true)
     try {
       let receiptData = null
@@ -129,13 +135,13 @@ export default function CreateExpensePage() {
 
       setUploadProgress('Saving expense record...')
       await api.post('/admin/expenses', {
-        amount: numAmount,
+        amount: amount,
         description: description.trim(),
+        repair: repairDetails.trim(),
         category,
-        carId: selectedCarId || undefined,
+        carId: selectedCarId,
         date: date ? new Date(date).toISOString() : new Date().toISOString(),
-        receiptImageUrl: receiptData?.url || undefined,
-        receiptImageId: receiptData?.fileId || undefined,
+        images: receiptData ? [receiptData] : [],
       })
 
       queryClient.invalidateQueries({ queryKey: ['expenses'] })
@@ -200,16 +206,30 @@ export default function CreateExpensePage() {
               <div className="space-y-4">
                 <label className="text-sm font-bold text-surface-200 flex items-center gap-2">
                   <FileText className="h-4 w-4 text-brand-400" />
-                  Description / Repair Details <span className="text-rose-500">*</span>
+                  Description <span className="text-rose-500">*</span>
                 </label>
-                <textarea
+                <input
+                  type="text"
                   required
                   minLength={3}
-                  rows={4}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
+                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium"
+                  placeholder="e.g. Monthly Office Supplies, Oil Change..."
+                />
+              </div>
+
+              <div className="space-y-4">
+                <label className="text-sm font-bold text-surface-200 flex items-center gap-2">
+                  <FileText className="h-4 w-4 text-brand-400" />
+                  Repair Details
+                </label>
+                <textarea
+                  rows={4}
+                  value={repairDetails}
+                  onChange={(e) => setRepairDetails(e.target.value)}
                   className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium resize-none"
-                  placeholder="Describe the repair details, maintenance, or other expenses in depth..."
+                  placeholder="Describe the repair details in depth..."
                 />
               </div>
 
@@ -256,15 +276,16 @@ export default function CreateExpensePage() {
               <div className="space-y-4">
                 <label className="text-sm font-bold text-surface-200 flex items-center gap-2">
                   <Car className="h-4 w-4 text-brand-400" />
-                  Related Vehicle (Optional)
+                  Vehicle Name <span className="text-rose-500">*</span>
                 </label>
                 <select
+                  required
                   value={selectedCarId}
                   onChange={(e) => setSelectedCarId(e.target.value)}
                   className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium appearance-none"
                 >
-                  <option value="" className="bg-surface-900 text-surface-500">
-                    -- General Expense (No specific car) --
+                  <option value="" disabled className="bg-surface-900 text-surface-500">
+                    -- Select Vehicle --
                   </option>
                   {!isLoadingCars && carsData?.map((car: any) => (
                     <option key={car._id} value={car._id} className="bg-surface-900">
@@ -272,9 +293,6 @@ export default function CreateExpensePage() {
                     </option>
                   ))}
                 </select>
-                <p className="text-xs text-surface-500">
-                  Select a vehicle if this expense was for maintenance, fuel, or repair of a specific car.
-                </p>
               </div>
 
               <div className="space-y-4">
