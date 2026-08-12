@@ -187,9 +187,7 @@ export default function CreateExpensePage() {
                     <span className="text-surface-500 font-bold">$</span>
                   </div>
                   <input
-                    type="number"
-                    step="0.01"
-                    min="0.01"
+                    type="text"
                     required
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
@@ -202,16 +200,16 @@ export default function CreateExpensePage() {
               <div className="space-y-4">
                 <label className="text-sm font-bold text-surface-200 flex items-center gap-2">
                   <FileText className="h-4 w-4 text-brand-400" />
-                  Description <span className="text-rose-500">*</span>
+                  Description / Repair Details <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="text"
+                <textarea
                   required
                   minLength={3}
+                  rows={4}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium"
-                  placeholder="e.g. Monthly Office Supplies, Oil Change..."
+                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium resize-none"
+                  placeholder="Describe the repair details, maintenance, or other expenses in depth..."
                 />
               </div>
 
@@ -282,7 +280,7 @@ export default function CreateExpensePage() {
               <div className="space-y-4">
                 <label className="text-sm font-bold text-surface-200 flex items-center gap-2">
                   <ImagePlus className="h-4 w-4 text-brand-400" />
-                  Receipt Image (Optional)
+                  Receipt / Image Upload (Optional)
                 </label>
                 
                 {imagePreview ? (
@@ -316,7 +314,7 @@ export default function CreateExpensePage() {
                         <UploadCloud className="h-6 w-6 text-surface-400 group-hover:text-brand-400" />
                       </div>
                       <p className="text-sm font-bold text-surface-200">
-                        Click or drag receipt photo here
+                        Click or drag image here
                       </p>
                       <p className="text-xs text-surface-500 mt-1">
                         PNG, JPG or WEBP up to 10MB
