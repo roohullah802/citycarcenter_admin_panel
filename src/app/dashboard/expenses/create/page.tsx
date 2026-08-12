@@ -315,7 +315,7 @@ export default function CreateExpensePage() {
               <div className="space-y-4">
                 <label className="text-sm font-bold text-surface-200 flex items-center gap-2">
                   <ImagePlus className="h-4 w-4 text-brand-400" />
-                  Receipt / Image Upload (Optional)
+                  Receipt / Image Upload *
                 </label>
 
                 {imagePreview ? (
@@ -340,6 +340,7 @@ export default function CreateExpensePage() {
                   <div className="relative group">
                     <input
                       type="file"
+                      required
                       disabled={isSubmitting}
                       accept="image/jpeg,image/png,image/webp"
                       onChange={handleImageSelect}

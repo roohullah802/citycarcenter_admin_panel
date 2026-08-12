@@ -219,7 +219,7 @@ export default function CreateDamageInspectionPage() {
                 type="text"
                 value={licensePlate}
                 onChange={(e) => setLicensePlate(e.target.value)}
-                placeholder="Person License Number..."
+                placeholder="License Number..."
                 className={inputClass}
                 required
               />
@@ -315,6 +315,7 @@ export default function CreateDamageInspectionPage() {
             <input
               ref={imageInputRef}
               type="file"
+              required
               accept="image/*"
               multiple
               className="hidden"
