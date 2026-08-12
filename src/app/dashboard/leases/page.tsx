@@ -142,7 +142,7 @@ export default function LeasesPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-        {/* Total Revenue */}
+        {/* Gross Profit */}
         <div className="bg-card border border-surface-800/50 rounded-2xl p-6 shadow-sm overflow-hidden relative group">
           <div className="absolute top-0 right-0 p-6 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-500">
             <TrendingUp className="h-24 w-24 text-emerald-400" />
@@ -151,10 +151,10 @@ export default function LeasesPage() {
             <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400">
               <TrendingUp className="h-5 w-5" />
             </div>
-            <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Total Revenue</p>
+            <p className="text-xs font-bold text-surface-400 uppercase tracking-wider">Gross Profit</p>
           </div>
           <p className="text-3xl font-bold text-emerald-400 tracking-tight">${totalRevenue.toLocaleString()}</p>
-          <p className="text-[10px] text-surface-500 mt-2">Total gross revenue from leases</p>
+          <p className="text-[10px] text-surface-500 mt-2">Total gross profit from leases</p>
         </div>
 
         {/* Transactions */}

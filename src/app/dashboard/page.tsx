@@ -1,7 +1,7 @@
 'use client'
 
 import { useDashboardStats } from '@/hooks/useDashboardStats'
-import { Car, Users, ReceiptText, DollarSign, Loader2, ArrowUpRight, ArrowDownRight, LayoutDashboard, ShieldCheck, FileText, Settings, PlusCircle } from 'lucide-react'
+import { Car, Users, ReceiptText, DollarSign, Loader2, ArrowUpRight, ArrowDownRight, LayoutDashboard, ShieldCheck, FileText, Settings, PlusCircle, TrendingUp } from 'lucide-react'
 import Link from 'next/link'
 
 
@@ -60,6 +60,16 @@ export default function DashboardPage() {
       bgColor: 'bg-amber-500/10',
       borderColor: 'border-amber-500/20'
     },
+    {
+      name: 'Net Profit',
+      stat: `$${(data?.stats?.netProfit || 0).toLocaleString()}`,
+      icon: TrendingUp,
+      change: '+14.2%',
+      changeType: 'increase',
+      color: 'text-emerald-400',
+      bgColor: 'bg-emerald-500/10',
+      borderColor: 'border-emerald-500/20'
+    },
   ]
 
   return (
@@ -73,7 +83,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((item) => (
           <div
             key={item.name}
