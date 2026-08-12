@@ -112,6 +112,11 @@ export default function CreateDamageInspectionPage() {
     const leasesList = getLeases.data?.data || []
     const matchingLease = leasesList.find((l: any) => l.car?._id === selectedCarId || l.car === selectedCarId)
 
+    if (pendingImages.length === 0) {
+      toast.error('Please upload at least one image of the damage')
+      return
+    }
+
     setIsSubmitting(true)
     try {
       setUploadProgress(`Uploading damage photos (0/${pendingImages.length})...`)
@@ -315,11 +320,11 @@ export default function CreateDamageInspectionPage() {
             <input
               ref={imageInputRef}
               type="file"
-              required
               accept="image/*"
               multiple
               className="hidden"
               onChange={handleImageSelect}
+              disabled={isSubmitting}
             />
           </div>
 

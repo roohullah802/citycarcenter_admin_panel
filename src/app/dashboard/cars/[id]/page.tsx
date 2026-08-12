@@ -2,17 +2,17 @@
 
 import { useCars } from '@/hooks/useCars'
 import { useParams } from 'next/navigation'
-import { 
-  Loader2, 
-  ArrowLeft, 
-  CarFront, 
-  Settings2, 
-  TrendingUp, 
-  ChevronLeft, 
-  ChevronRight, 
-  Maximize2, 
-  X, 
-  Images 
+import {
+  Loader2,
+  ArrowLeft,
+  CarFront,
+  Settings2,
+  TrendingUp,
+  ChevronLeft,
+  ChevronRight,
+  Maximize2,
+  X,
+  Images
 } from 'lucide-react'
 import Link from 'next/link'
 import { DataTable } from '@/components/ui/DataTable'
@@ -133,15 +133,15 @@ export default function CarDetailsPage() {
         <div className="lg:col-span-1 space-y-6">
           <div className="bg-card border border-surface-800/50 rounded-2xl overflow-hidden shadow-sm">
             {/* Interactive Image Display */}
-            <div 
-              className="relative aspect-[16/10] bg-surface-950 border-b border-surface-800 group cursor-pointer overflow-hidden"
+            <div
+              className="relative aspect-16/10 bg-surface-950 border-b border-surface-800 group cursor-pointer overflow-hidden"
               onClick={() => activeImage && setIsLightboxOpen(true)}
             >
               {activeImage ? (
-                <img 
-                  src={activeImage} 
-                  alt={`${carDetails.brand} ${carDetails.modelName}`} 
-                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105" 
+                <img
+                  src={activeImage}
+                  alt={`${carDetails.brand} ${carDetails.modelName}`}
+                  className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-surface-700">
@@ -197,11 +197,10 @@ export default function CarDetailsPage() {
                   <button
                     key={idx}
                     onClick={() => setActiveImageIndex(idx)}
-                    className={`relative aspect-[16/10] w-20 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
-                      idx === activeImageIndex 
-                        ? 'border-brand-500 ring-2 ring-brand-500/20 scale-105 shadow-lg' 
-                        : 'border-surface-800 opacity-60 hover:opacity-100 hover:border-surface-600'
-                    }`}
+                    className={`relative aspect-16/10 w-20 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${idx === activeImageIndex
+                      ? 'border-brand-500 ring-2 ring-brand-500/20 scale-105 shadow-lg'
+                      : 'border-surface-800 opacity-60 hover:opacity-100 hover:border-surface-600'
+                      }`}
                   >
                     <img src={img.url} alt="" className="object-cover w-full h-full" />
                   </button>
@@ -269,7 +268,7 @@ export default function CarDetailsPage() {
 
       {/* Full-Screen Image Lightbox Modal */}
       {isLightboxOpen && activeImage && (
-        <div 
+        <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 sm:p-8 animate-in fade-in duration-200"
           onClick={() => setIsLightboxOpen(false)}
         >
@@ -294,7 +293,7 @@ export default function CarDetailsPage() {
           </div>
 
           {/* Large Image Container */}
-          <div 
+          <div
             className="relative flex items-center justify-center w-full h-full max-w-6xl max-h-[82vh]"
             onClick={(e) => e.stopPropagation()}
           >
@@ -327,7 +326,7 @@ export default function CarDetailsPage() {
 
           {/* Bottom Thumbnails Strip in Lightbox */}
           {hasMultipleImages && (
-            <div 
+            <div
               className="absolute bottom-6 inset-x-0 flex items-center justify-center gap-3 z-20 px-6 overflow-x-auto no-scrollbar pointer-events-auto"
               onClick={(e) => e.stopPropagation()}
             >
@@ -335,11 +334,10 @@ export default function CarDetailsPage() {
                 <button
                   key={idx}
                   onClick={() => setActiveImageIndex(idx)}
-                  className={`aspect-[16/10] w-16 sm:w-20 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
-                    idx === activeImageIndex 
-                      ? 'border-brand-500 ring-4 ring-brand-500/30 scale-110 shadow-2xl' 
-                      : 'border-surface-800 opacity-40 hover:opacity-100 hover:border-surface-600'
-                  }`}
+                  className={`aspect-16/10 w-16 sm:w-20 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${idx === activeImageIndex
+                    ? 'border-brand-500 ring-4 ring-brand-500/30 scale-110 shadow-2xl'
+                    : 'border-surface-800 opacity-40 hover:opacity-100 hover:border-surface-600'
+                    }`}
                 >
                   <img src={img.url} alt="" className="object-cover w-full h-full" />
                 </button>
