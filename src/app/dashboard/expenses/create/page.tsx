@@ -192,7 +192,9 @@ export default function CreateExpensePage() {
                     <span className="text-surface-500 font-bold">$</span>
                   </div>
                   <input
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="0.01"
                     required
                     disabled={isSubmitting}
                     value={amount}

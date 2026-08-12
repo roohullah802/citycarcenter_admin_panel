@@ -281,7 +281,9 @@ export default function CreateDamageInspectionPage() {
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Estimated Repair Cost ($)</label>
               <input
-                type="text"
+                type="number"
+                min="0"
+                step="0.01"
                 value={estimatedCost}
                 onChange={(e) => setEstimatedCost(e.target.value)}
                 placeholder="e.g. 250"
