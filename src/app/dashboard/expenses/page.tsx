@@ -45,8 +45,9 @@ export default function ExpensesPage() {
       const text = [
         item.description,
         item.category,
-        item.carId?.carName,
-        item.carId?.licensePlate,
+        item.carId?.brand,
+        item.carId?.modelName,
+        item.carId?.year,
       ].filter(Boolean).join(' ').toLowerCase()
       return tokens.every(token => text.includes(token))
     })
@@ -74,11 +75,14 @@ export default function ExpensesPage() {
     {
       accessorKey: 'amount',
       header: 'Amount',
-      cell: ({ row }: any) => (
-        <span className="font-bold text-rose-400">
-          ${row.original.amount?.toFixed(2) || '0.00'}
-        </span>
-      ),
+      cell: ({ row }: any) => {
+        const amt = parseFloat(String(row.original.amount || '0').replace(/[^0-9.]/g, ''));
+        return (
+          <span className="font-bold text-rose-400">
+            ${isNaN(amt) ? '0.00' : amt.toFixed(2)}
+          </span>
+        )
+      },
     },
     {
       accessorKey: 'carId',
@@ -90,21 +94,22 @@ export default function ExpensesPage() {
         return (
           <div className="flex flex-col">
             <span className="font-bold text-surface-50 capitalize">
-              {car.carName}
+              {car.brand} {car.modelName}
             </span>
             <span className="text-[10px] text-surface-500 font-medium">
-              Plate: {car.licensePlate || 'N/A'}
+              {car.year} {car.color ? `• ${car.color}` : ''}
             </span>
           </div>
         )
       },
     },
     {
-      accessorKey: 'receiptImageUrl',
+      accessorKey: 'images',
       header: 'Receipt',
       cell: ({ row }: any) => {
-        const url = row.original.receiptImageUrl
-        if (!url) return <span className="text-surface-500 italic text-xs">No receipt</span>
+        const images = row.original.images
+        if (!images || images.length === 0) return <span className="text-surface-500 italic text-xs">No receipt</span>
+        const url = images[0].url
         
         return (
           <a href={url} target="_blank" rel="noopener noreferrer">
