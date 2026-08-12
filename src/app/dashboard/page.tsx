@@ -88,9 +88,6 @@ export default function DashboardPage() {
               <div className={`p-3 rounded-xl ${item.bgColor} ${item.color} transition-colors group-hover:scale-110 duration-300`}>
                 <item.icon className="h-6 w-6" aria-hidden="true" />
               </div>
-              <div className={`flex items-center gap-1 text-xs font-bold ${item.changeType === 'increase' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                {item.changeType === 'increase' ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-              </div>
             </div>
             <div>
               <p className="text-sm font-semibold text-surface-400 tracking-wide uppercase">{item.name}</p>
