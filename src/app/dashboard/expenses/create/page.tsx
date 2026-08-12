@@ -53,7 +53,7 @@ export default function CreateExpensePage() {
   const [uploadProgress, setUploadProgress] = useState('')
 
   // Fetch cars for dropdown
-  const { data: carsData, isLoading: isLoadingCars } = useQuery({
+  const { data: carsData, isLoading: isLoadingCars, isError: isErrorCars } = useQuery({
     queryKey: ['cars'],
     queryFn: async () => {
       const res = await api.get('/admin/cars/stats')
@@ -195,9 +195,10 @@ export default function CreateExpensePage() {
                   <input
                     type="text"
                     required
+                    disabled={isSubmitting}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full pl-8 pr-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium"
+                    className="w-full pl-8 pr-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                     placeholder="0.00"
                   />
                 </div>
@@ -211,10 +212,11 @@ export default function CreateExpensePage() {
                 <input
                   type="text"
                   required
+                  disabled={isSubmitting}
                   minLength={3}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium"
+                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="e.g. Monthly Office Supplies, Oil Change..."
                 />
               </div>
@@ -226,9 +228,10 @@ export default function CreateExpensePage() {
                 </label>
                 <textarea
                   rows={4}
+                  disabled={isSubmitting}
                   value={repairDetails}
                   onChange={(e) => setRepairDetails(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium resize-none"
+                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                   placeholder="Describe the repair details in depth..."
                 />
               </div>
@@ -240,9 +243,10 @@ export default function CreateExpensePage() {
                 </label>
                 <select
                   required
+                  disabled={isSubmitting}
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium appearance-none"
+                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {EXPENSE_CATEGORIES.map(cat => (
                     <option key={cat} value={cat} className="bg-surface-900">
@@ -260,9 +264,10 @@ export default function CreateExpensePage() {
                 <input
                   type="date"
                   required
+                  disabled={isSubmitting}
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium"
+                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
 
@@ -280,18 +285,31 @@ export default function CreateExpensePage() {
                 </label>
                 <select
                   required
+                  disabled={isSubmitting || isLoadingCars}
                   value={selectedCarId}
                   onChange={(e) => setSelectedCarId(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium appearance-none"
+                  className="w-full px-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <option value="" disabled className="bg-surface-900 text-surface-500">
-                    -- Select Vehicle --
-                  </option>
-                  {!isLoadingCars && carsData?.map((car: any) => (
-                    <option key={car._id} value={car._id} className="bg-surface-900">
-                      {car.year} {car.brand} {car.modelName} ({car.color})
+                  {isLoadingCars ? (
+                    <option value="" disabled className="bg-surface-900 text-surface-500">
+                      Loading vehicles...
                     </option>
-                  ))}
+                  ) : isErrorCars ? (
+                    <option value="" disabled className="bg-surface-900 text-rose-500">
+                      Failed to load vehicles
+                    </option>
+                  ) : (
+                    <>
+                      <option value="" disabled className="bg-surface-900 text-surface-500">
+                        -- Select Vehicle --
+                      </option>
+                      {carsData?.map((car: any) => (
+                        <option key={car._id} value={car._id} className="bg-surface-900">
+                          {car.year} {car.brand} {car.modelName} ({car.color})
+                        </option>
+                      ))}
+                    </>
+                  )}
                 </select>
               </div>
 
@@ -323,9 +341,10 @@ export default function CreateExpensePage() {
                   <div className="relative group">
                     <input
                       type="file"
+                      disabled={isSubmitting}
                       accept="image/jpeg,image/png,image/webp"
                       onChange={handleImageSelect}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
                     />
                     <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed border-surface-700 rounded-2xl bg-surface-950/50 group-hover:bg-surface-900 group-hover:border-brand-500/50 transition-all">
                       <div className="h-12 w-12 rounded-xl bg-surface-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform group-hover:bg-brand-500/20">
@@ -350,7 +369,9 @@ export default function CreateExpensePage() {
         <div className="flex flex-col sm:flex-row items-center justify-end gap-4 p-6 rounded-2xl border border-surface-800/50 bg-surface-900/50 backdrop-blur-xl shadow-2xl">
           <Link
             href="/dashboard/expenses"
-            className="w-full sm:w-auto px-6 py-3 bg-surface-800 hover:bg-surface-700 text-white font-bold rounded-xl transition-colors text-center"
+            className={`w-full sm:w-auto px-6 py-3 bg-surface-800 text-white font-bold rounded-xl transition-colors text-center ${
+              isSubmitting ? 'opacity-50 pointer-events-none' : 'hover:bg-surface-700'
+            }`}
           >
             Cancel
           </Link>
