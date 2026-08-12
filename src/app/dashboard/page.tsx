@@ -24,7 +24,6 @@ export default function DashboardPage() {
       name: 'Total Users',
       stat: data?.stats?.totalUsers || 0,
       icon: Users,
-      change: '+12.5%',
       changeType: 'increase',
       color: 'text-blue-400',
       bgColor: 'bg-blue-500/10',
@@ -34,7 +33,6 @@ export default function DashboardPage() {
       name: 'Total Cars',
       stat: data?.stats?.totalCars || 0,
       icon: Car,
-      change: '+3.2%',
       changeType: 'increase',
       color: 'text-purple-400',
       bgColor: 'bg-purple-500/10',
@@ -44,7 +42,6 @@ export default function DashboardPage() {
       name: 'Active Leases',
       stat: data?.stats?.activeLeases || 0,
       icon: ReceiptText,
-      change: '-2.1%',
       changeType: 'decrease',
       color: 'text-emerald-400',
       bgColor: 'bg-emerald-500/10',
@@ -54,7 +51,6 @@ export default function DashboardPage() {
       name: 'Gross Profit',
       stat: `$${(data?.stats?.grossProfit || data?.stats?.totalRevenue || 0).toLocaleString()}`,
       icon: DollarSign,
-      change: '+18.4%',
       changeType: 'increase',
       color: 'text-amber-400',
       bgColor: 'bg-amber-500/10',
@@ -64,7 +60,6 @@ export default function DashboardPage() {
       name: 'Net Profit',
       stat: `$${(data?.stats?.netProfit || 0).toLocaleString()}`,
       icon: TrendingUp,
-      change: '+14.2%',
       changeType: 'increase',
       color: 'text-emerald-400',
       bgColor: 'bg-emerald-500/10',
@@ -95,7 +90,6 @@ export default function DashboardPage() {
               </div>
               <div className={`flex items-center gap-1 text-xs font-bold ${item.changeType === 'increase' ? 'text-emerald-600' : 'text-rose-600'}`}>
                 {item.changeType === 'increase' ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
-                {item.change}
               </div>
             </div>
             <div>
