@@ -199,7 +199,7 @@ export default function CreateExpensePage() {
                     disabled={isSubmitting}
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full pl-8 pr-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full pl-8 pr-4 py-3.5 bg-surface-950/50 border border-surface-800 rounded-xl text-white placeholder-surface-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 font-medium disabled:opacity-50 disabled:cursor-not-allowed [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     placeholder="0.00"
                   />
                 </div>
