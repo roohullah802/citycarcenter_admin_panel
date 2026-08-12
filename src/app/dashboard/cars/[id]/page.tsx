@@ -124,7 +124,7 @@ export default function CarDetailsPage() {
           <h2 className="text-3xl font-bold tracking-tight text-surface-50 capitalize">
             {carDetails.brand} {carDetails.modelName}
           </h2>
-          <p className="text-surface-400 font-medium">{carDetails.year} Model • {carDetails.licensePlate || carDetails.plateNumber || 'No Plate'}</p>
+          <p className="text-surface-400 font-medium">{carDetails.year} Model{carDetails.color ? ` • ${carDetails.color}` : ''}</p>
         </div>
       </div>
 

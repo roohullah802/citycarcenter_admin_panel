@@ -51,7 +51,7 @@ export default function CarsPage() {
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-surface-50 capitalize leading-none">{row.original.brand} {row.original.modelName}</span>
-              <span className="text-[10px] font-medium text-surface-500 mt-1 uppercase tracking-wider">{row.original.year} • {row.original.plateNumber || 'No Plate'}</span>
+              <span className="text-[10px] font-medium text-surface-500 mt-1 uppercase tracking-wider">{row.original.year}{row.original.color ? ` • ${row.original.color}` : ''}</span>
             </div>
           </div>
         )
