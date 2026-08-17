@@ -41,6 +41,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             (account as any).userRole = data.user.role;
             return true;
           }
+          require("fs").writeFileSync("last-auth-error.txt", JSON.stringify(data));
           console.log("Backend auth failed:", data);
           return false;
         } catch (error) {
