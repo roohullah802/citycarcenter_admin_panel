@@ -1,4 +1,5 @@
 'use client'
+import { useSession } from 'next-auth/react'
 
 import { useUsers } from '@/hooks/useUsers'
 import { DataTable } from '@/components/ui/DataTable'
@@ -9,9 +10,10 @@ import { useSearch } from '@/context/SearchContext'
 import { useState, useMemo } from 'react'
 
 export default function UsersPage() {
-  const { getUsers } = useUsers()
+  const { getUsers, toggleRole } = useUsers()
   const { searchQuery } = useSearch()
   const router = useRouter()
+  const { data: session } = useSession()
 
   // Date filter state
   const [dateFrom, setDateFrom] = useState('')
@@ -124,8 +126,24 @@ export default function UsersPage() {
     {
       id: 'actions',
       cell: ({ row }) => {
+        const isSuperAdmin = session?.userRole === 'superadmin'
+        const isTargetSuperAdmin = row.original.role === 'superadmin'
+
         return (
           <div className="flex items-center justify-end space-x-2">
+            {isSuperAdmin && !isTargetSuperAdmin && (
+              <button
+                onClick={() => toggleRole.mutate(row.original._id)}
+                disabled={toggleRole.isPending}
+                className={`px-3 py-1 text-xs font-bold rounded-lg border transition-all ${
+                  row.original.role === 'admin'
+                    ? 'bg-rose-500/10 text-rose-400 border-rose-500/20 hover:bg-rose-500/20'
+                    : 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20'
+                } disabled:opacity-50`}
+              >
+                {row.original.role === 'admin' ? 'Revoke Admin' : 'Make Admin'}
+              </button>
+            )}
             <button
               onClick={() => router.push(`/dashboard/users/${row.original._id}`)}
               className="p-2 text-surface-400 hover:text-brand-400 hover:bg-brand-500/10 rounded-lg transition-all"

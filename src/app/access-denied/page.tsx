@@ -1,35 +1,30 @@
-"use client"
-import { useClerk } from '@clerk/nextjs'
-import { ShieldAlert } from 'lucide-react'
+"use client";
 
-export default function AccessDenied() {
-  const { signOut } = useClerk()
+import { signOut } from "next-auth/react";
+import Link from "next/link";
 
+export default function AccessDeniedPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-surface-950 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-card p-10 rounded-2xl shadow-2xl border border-surface-800/50 text-center">
-        <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-red-500/10 border border-red-500/20">
-          <ShieldAlert className="h-12 w-12 text-red-500" aria-hidden="true" />
+    <div className="flex min-h-[80vh] flex-col items-center justify-center p-4">
+      <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-8 text-center backdrop-blur-sm max-w-md w-full">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-rose-500/20">
+          <svg className="h-8 w-8 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
         </div>
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-bold text-surface-50">
-            Access Denied
-          </h2>
-          <p className="mt-4 text-center text-sm text-surface-400 font-medium leading-relaxed">
-            You do not have the required administrative privileges to view this application. 
-            Please contact the system administrator for access.
-          </p>
-        </div>
-        <div className="mt-8 space-y-6">
+        <h1 className="mb-2 text-2xl font-bold text-rose-500">Access Denied</h1>
+        <p className="mb-8 text-surface-400">
+          You do not have permission to view this page. This area is restricted to administrators only.
+        </p>
+        <div className="flex flex-col gap-3">
           <button
-            onClick={() => signOut()}
-            className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 uppercase tracking-wider"
+            onClick={() => signOut({ callbackUrl: "/sign-in" })}
+            className="w-full rounded-xl bg-rose-500 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 focus:ring-offset-surface-900"
           >
-            Sign out and try another account
+            Sign in with a different account
           </button>
         </div>
       </div>
     </div>
-  )
+  );
 }
-

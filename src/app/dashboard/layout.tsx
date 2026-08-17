@@ -1,6 +1,5 @@
 import { Sidebar } from '@/components/layout/Sidebar'
 import { TopBar } from '@/components/layout/TopBar'
-import { TokenInitializer } from '@/components/auth/TokenInitializer'
 
 export default function DashboardLayout({
   children,
@@ -8,13 +7,14 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="flex h-screen overflow-hidden bg-surface-950">
-      <TokenInitializer />
+    <div className="flex h-screen overflow-hidden bg-background">
       <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
+      
+      <div className="flex flex-1 flex-col min-w-0">
         <TopBar />
-        <main className="flex-1 overflow-y-auto no-scrollbar p-4 sm:p-6 lg:p-10 xl:p-12">
-          <div className="mx-auto max-w-400">
+        
+        <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8">
+          <div className="mx-auto max-w-7xl">
             {children}
           </div>
         </main>

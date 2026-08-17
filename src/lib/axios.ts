@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getSession } from 'next-auth/react';
 
 // Ensure baseURL points to /api/v1 (stripping any accidental trailing /admin or slashes)
 const rawUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.citycarcenters.com/api/v1';
@@ -11,44 +12,25 @@ export const api = axios.create({
   },
 });
 
-// Dynamic request interceptor: Ensures every API request contains a valid Clerk token
+// Dynamic request interceptor: Ensures every API request contains a valid token
 api.interceptors.request.use(async (config) => {
-  if (!config.headers['Authorization'] && typeof window !== 'undefined' && (window as any).Clerk?.session) {
+  if (!config.headers['Authorization'] && typeof window !== 'undefined') {
     try {
-      const token = await (window as any).Clerk.session.getToken();
-      if (token) {
-        config.headers['Authorization'] = `Bearer ${token}`;
+      const session = await getSession();
+      if (session?.backendToken) {
+        config.headers['Authorization'] = `Bearer ${session.backendToken}`;
       }
     } catch (err) {
-      console.error('Failed to attach Clerk token in request interceptor:', err);
+      console.error('Failed to attach NextAuth token in request interceptor:', err);
     }
   }
   return config;
 });
 
-// Response interceptor: Retry 401s once with a fresh Clerk token (handles expired/missing tokens)
+// Response interceptor: handle token expiration if needed
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
-      typeof window !== 'undefined' &&
-      (window as any).Clerk?.session
-    ) {
-      originalRequest._retry = true;
-      try {
-        const token = await (window as any).Clerk.session.getToken();
-        if (token) {
-          setAuthToken(token);
-          originalRequest.headers['Authorization'] = `Bearer ${token}`;
-          return api(originalRequest);
-        }
-      } catch (retryErr) {
-        console.error('Token refresh retry failed:', retryErr);
-      }
-    }
     return Promise.reject(error);
   }
 );

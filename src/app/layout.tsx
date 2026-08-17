@@ -1,4 +1,3 @@
-import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
@@ -21,15 +20,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}>
-      <html lang="en" className="h-full bg-gray-50" suppressHydrationWarning>
-        <body className={`${inter.className} h-full`} suppressHydrationWarning>
-          <Providers>
-            {children}
-            <Toaster position="top-right" richColors />
-          </Providers>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en" className="h-full bg-gray-50" suppressHydrationWarning>
+      <body className={`${inter.className} h-full`} suppressHydrationWarning>
+        <Providers>
+          {children}
+          <Toaster position="top-right" richColors />
+        </Providers>
+      </body>
+    </html>
   )
 }

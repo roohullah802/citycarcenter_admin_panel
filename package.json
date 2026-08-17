@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^7.2.7",
+    "@auth/core": "^0.41.3",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "^5.100.5",
     "@tanstack/react-table": "^8.21.3",
@@ -18,6 +18,7 @@
     "imagekitio-react": "^4.3.0",
     "lucide-react": "^1.11.0",
     "next": "16.2.4",
+    "next-auth": "^5.0.0-beta.32",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.74.0",

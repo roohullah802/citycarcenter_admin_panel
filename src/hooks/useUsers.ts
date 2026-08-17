@@ -25,8 +25,24 @@ export function useUsers() {
 
 
 
+  const toggleRole = useMutation({
+    mutationFn: async (userId: string) => {
+      const res = await api.post('/admin/roles/toggle', { userId });
+      return res.data;
+    },
+    onSuccess: (data, userId) => {
+      toast.success(data.message || 'User role updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+      queryClient.invalidateQueries({ queryKey: ['user', userId] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Failed to update user role');
+    },
+  });
+
   return {
     getUsers,
     getUserDetails,
+    toggleRole,
   };
 }

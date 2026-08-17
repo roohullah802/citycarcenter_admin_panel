@@ -1,11 +1,11 @@
 'use client'
 
-import { UserButton } from '@clerk/nextjs'
-import { Search, Command, X, Menu } from 'lucide-react'
+import { Search, Command, X, Menu, LogOut } from 'lucide-react'
 import { useSearch } from '@/context/SearchContext'
 import { useSidebar } from '@/context/SidebarContext'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState, useRef } from 'react'
+import { signOut, useSession } from 'next-auth/react'
 
 export function TopBar() {
   const { searchQuery, setSearchQuery } = useSearch()
@@ -14,6 +14,7 @@ export function TopBar() {
   const [localSearch, setLocalSearch] = useState(searchQuery)
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { data: session } = useSession()
 
   // Sync local search with global search query when it changes elsewhere
   useEffect(() => {
@@ -150,17 +151,17 @@ export function TopBar() {
             {/* Profile dropdown */}
             <div className="relative flex items-center gap-3">
               <div className="hidden sm:flex flex-col items-end mr-1">
-                <span className="text-sm font-semibold text-surface-100 leading-none">Admin User</span>
-                <span className="text-[10px] font-medium text-surface-500 mt-1">Super Admin</span>
+                <span className="text-sm font-semibold text-surface-100 leading-none">{session?.user?.name || "Admin"}</span>
+                <span className="text-[10px] font-medium text-surface-500 mt-1 capitalize">{session?.userRole || "Super Admin"}</span>
               </div>
               <div className="p-0.5 rounded-full ring-2 ring-brand-500/20">
-                <UserButton
-                  appearance={{
-                    elements: {
-                      userButtonAvatarBox: "h-8 w-8 sm:h-9 sm:w-9 rounded-full"
-                    }
-                  }}
-                />
+                <button
+                  onClick={() => signOut()}
+                  className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-surface-800 hover:bg-surface-700 transition-colors text-white"
+                  title="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
               </div>
             </div>
           </div>
