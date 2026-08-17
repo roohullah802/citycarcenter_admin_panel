@@ -118,11 +118,11 @@ export default function DocumentsPage() {
                     </h3>
                     <p className="text-xs font-medium text-surface-500 truncate mt-0.5">{doc.email}</p>
                   </div>
-                    <div className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter border ${doc.documentStatus === 'approved'
-                      ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                      : doc.documentStatus === 'declined'
-                        ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
-                        : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                  <div className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-tighter border ${doc.documentStatus === 'approved'
+                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                    : doc.documentStatus === 'declined'
+                      ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                      : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
                     }`}>
                     {doc.documentStatus || 'pending'}
                   </div>
@@ -136,7 +136,7 @@ export default function DocumentsPage() {
                         <div key={i} className="space-y-1.5">
                           <span className="text-[9px] font-bold text-surface-600 uppercase tracking-widest pl-1">{item.label}</span>
                           <div
-                            className="relative aspect-[4/3] rounded-xl overflow-hidden border border-surface-800 bg-surface-950 cursor-pointer group/img"
+                            className="relative aspect-4/3 rounded-xl overflow-hidden border border-surface-800 bg-surface-950 cursor-pointer group/img"
                             onClick={() => setSelectedImage(item)}
                           >
                             <img
@@ -202,7 +202,7 @@ export default function DocumentsPage() {
       {/* Image Previewer Modal */}
       {selectedImage && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-300"
+          className="fixed inset-0 z-100 flex items-center justify-center p-4 md:p-10 animate-in fade-in duration-300"
           onClick={() => setSelectedImage(null)}
         >
           <div className="absolute inset-0 bg-surface-950/90 backdrop-blur-xl" />
