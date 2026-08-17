@@ -21,7 +21,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (account?.provider === "google" && account.id_token) {
         try {
           console.log("Sending ID token to backend...");
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
+          const baseUrl = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/admin\/?$/, "");
+          const res = await fetch(`${baseUrl}/auth/google`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
