@@ -44,8 +44,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           require("fs").writeFileSync("last-auth-error.txt", JSON.stringify(data));
           console.log("Backend auth failed:", data);
           return false;
-        } catch (error) {
+        } catch (error: any) {
           console.error("Error signing in with Google backend", error);
+          require("fs").writeFileSync("last-auth-error.txt", error?.message || String(error));
           return false;
         }
       }
