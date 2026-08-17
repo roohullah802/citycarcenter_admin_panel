@@ -14,7 +14,8 @@ export default function AccessDeniedPage() {
         </div>
         <h1 className="mb-2 text-2xl font-bold text-rose-500">Access Denied</h1>
         <p className="mb-8 text-surface-400">
-          You do not have permission to view this page. This area is restricted to administrators only.
+          You do not have permission to view this page. This area is restricted to administrators only. 
+          If your permissions were recently updated, please sign out and sign in again.
         </p>
         <div className="flex flex-col gap-3">
           <button

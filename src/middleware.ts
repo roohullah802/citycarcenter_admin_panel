@@ -10,7 +10,7 @@ export default auth((req) => {
     if (!isLoggedIn) {
       return NextResponse.redirect(new URL("/sign-in", req.url));
     }
-    if (role !== "admin" && role !== "superadmin") {
+    if (role !== "admin") {
       return NextResponse.redirect(new URL("/access-denied", req.url));
     }
   }

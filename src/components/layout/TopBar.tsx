@@ -152,7 +152,7 @@ export function TopBar() {
             <div className="relative flex items-center gap-3">
               <div className="hidden sm:flex flex-col items-end mr-1">
                 <span className="text-sm font-semibold text-surface-100 leading-none">{session?.user?.name || "Admin"}</span>
-                <span className="text-[10px] font-medium text-surface-500 mt-1 capitalize">{session?.userRole || "Super Admin"}</span>
+                <span className="text-[10px] font-medium text-surface-500 mt-1 capitalize">{session?.userRole || "Admin"}</span>
               </div>
               <div className="p-0.5 rounded-full ring-2 ring-brand-500/20">
                 <button

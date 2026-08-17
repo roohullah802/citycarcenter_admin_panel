@@ -126,12 +126,12 @@ export default function UsersPage() {
     {
       id: 'actions',
       cell: ({ row }) => {
-        const isSuperAdmin = session?.userRole === 'superadmin'
-        const isTargetSuperAdmin = row.original.role === 'superadmin'
+        const isAdmin = session?.userRole === 'admin'
+        const isSelf = session?.user?.email === row.original.email
 
         return (
           <div className="flex items-center justify-end space-x-2">
-            {isSuperAdmin && !isTargetSuperAdmin && (
+            {isAdmin && !isSelf && (
               <button
                 onClick={() => toggleRole.mutate(row.original._id)}
                 disabled={toggleRole.isPending}
