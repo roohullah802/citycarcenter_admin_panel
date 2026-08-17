@@ -27,16 +27,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const data = await res.json();
 
           if (res.ok && data.token) {
-            // Check if the user is admin
-            if (data.user.role === "admin") {
-              // Set our custom backend token to the account so we can access it in jwt callback
-              (account as any).backendToken = data.token;
-              (account as any).userRole = data.user.role;
-              return true;
-            } else {
-              // Not an admin
-              return false;
-            }
+            // Set our custom backend token to the account so we can access it in jwt callback
+            (account as any).backendToken = data.token;
+            (account as any).userRole = data.user.role;
+            return true;
           }
           return false;
         } catch (error) {
