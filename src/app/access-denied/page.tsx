@@ -1,9 +1,13 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function AccessDeniedPage() {
+function AccessDeniedContent() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+
   return (
     <div className="flex min-h-[80vh] flex-col items-center justify-center p-4">
       <div className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-8 text-center backdrop-blur-sm max-w-md w-full">
@@ -13,10 +17,15 @@ export default function AccessDeniedPage() {
           </svg>
         </div>
         <h1 className="mb-2 text-2xl font-bold text-rose-500">Access Denied</h1>
-        <p className="mb-8 text-surface-400">
+        <p className="mb-4 text-surface-400">
           You do not have permission to view this page. This area is restricted to administrators only. 
           If your permissions were recently updated, please sign out and sign in again.
         </p>
+        {error && (
+          <div className="mb-8 p-3 bg-rose-500/20 rounded-lg text-rose-400 text-sm">
+            Error details: {error}
+          </div>
+        )}
         <div className="flex flex-col gap-3">
           <button
             onClick={() => signOut({ callbackUrl: "/sign-in" })}
@@ -27,5 +36,13 @@ export default function AccessDeniedPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AccessDeniedPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center p-4">Loading...</div>}>
+      <AccessDeniedContent />
+    </Suspense>
   );
 }

@@ -19,9 +19,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: "jwt",
   },
   callbacks: {
-    async signIn({ account }) {
+    async signIn({ account, user }) {
+      console.log("NextAuth signIn callback triggered");
+      console.log("Account object:", account);
+      console.log("User object:", user);
+      
       if (account?.provider === "google" && account.id_token) {
         try {
+          console.log("Sending ID token to backend...");
           const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
             method: "POST",
             headers: {
@@ -32,19 +37,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }),
           });
           const data = await res.json();
+          console.log("Backend response:", data);
 
           if (res.ok && data.token) {
+            console.log("Backend auth successful");
             // Set our custom backend token to the account so we can access it in jwt callback
             (account as any).backendToken = data.token;
             (account as any).userRole = data.user.role;
             return true;
           }
+          console.log("Backend auth failed:", data);
           return false;
         } catch (error) {
           console.error("Error signing in with Google backend", error);
           return false;
         }
       }
+      console.log("Missing Google provider or ID token");
       return false;
     },
     async jwt({ token, account }) {
