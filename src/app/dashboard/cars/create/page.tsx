@@ -81,6 +81,8 @@ export default function CreateCarPage() {
   const [uploadProgress, setUploadProgress] = useState('')
   const galleryInputRef = useRef<HTMLInputElement>(null)
   const brandInputRef = useRef<HTMLInputElement>(null)
+  const uploadedGalleryCache = useRef<{ url: string; fileId: string; file: File }[]>([])
+  const uploadedBrandCache = useRef<{ url: string; fileId: string; file: File } | null>(null)
 
   // Image preview URLs
   const imagePreviewUrls = pendingImages.map(f => URL.createObjectURL(f))
@@ -144,15 +146,26 @@ export default function CreateCarPage() {
       const uploadedImages: { url: string; fileId: string }[] = []
       for (let i = 0; i < pendingImages.length; i++) {
         setUploadProgress(`Uploading images (${i + 1}/${pendingImages.length})...`)
-        const result = await uploadToImageKit(pendingImages[i], '/cars')
-        uploadedImages.push(result)
+        const cached = uploadedGalleryCache.current.find(c => c.file === pendingImages[i])
+        if (cached) {
+          uploadedImages.push({ url: cached.url, fileId: cached.fileId })
+        } else {
+          const result = await uploadToImageKit(pendingImages[i], '/cars')
+          uploadedImages.push(result)
+          uploadedGalleryCache.current.push({ ...result, file: pendingImages[i] })
+        }
       }
 
       // Step 2: Upload brand image if present
       let uploadedBrandImage = null
       if (pendingBrandImage) {
-        setUploadProgress('Uploading brand logo...')
-        uploadedBrandImage = await uploadToImageKit(pendingBrandImage, '/brands')
+        if (uploadedBrandCache.current && uploadedBrandCache.current.file === pendingBrandImage) {
+          uploadedBrandImage = { url: uploadedBrandCache.current.url, fileId: uploadedBrandCache.current.fileId }
+        } else {
+          setUploadProgress('Uploading brand logo...')
+          uploadedBrandImage = await uploadToImageKit(pendingBrandImage, '/brands')
+          uploadedBrandCache.current = { ...uploadedBrandImage, file: pendingBrandImage }
+        }
       }
 
       // Step 3: Submit car data with image URLs to backend
@@ -367,6 +380,11 @@ export default function CreateCarPage() {
             <div className="flex items-center gap-3 pt-4 sm:col-span-2">
               <input type="checkbox" {...register('airCondition')} className="h-5 w-5 rounded-lg border-surface-800 bg-surface-900 text-brand-600 focus:ring-brand-500/20" />
               <label className="text-sm font-bold text-surface-200">Air Conditioning Included</label>
+            </div>
+            <div className="space-y-2">
+              <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">0-100 Time (s) *</label>
+              <input type="number" step="0.1" onKeyDown={preventInvalidNumberInput} {...register('mph', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} className={errors.mph ? errorInputClass : inputClass} />
+              {errors.mph && <p className="text-xs text-rose-400 font-medium mt-1">{errors.mph.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">HP / Max Power *</label>
