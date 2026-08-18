@@ -184,6 +184,12 @@ export default function CreateCarPage() {
 
   const inputClass = "block w-full rounded-xl border border-surface-800 bg-surface-900/50 py-3 px-4 text-surface-100 focus:border-brand-500/50 focus:outline-none focus:ring-2 focus:ring-brand-500/10 transition-all placeholder:text-surface-700 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
   const errorInputClass = "block w-full rounded-xl border border-rose-500/50 bg-surface-900/50 py-3 px-4 text-surface-100 focus:border-rose-500/50 focus:outline-none focus:ring-2 focus:ring-rose-500/10 transition-all placeholder:text-surface-700"
+  
+  const preventInvalidNumberInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (['-', '+', 'e', 'E'].includes(e.key)) {
+      e.preventDefault();
+    }
+  }
 
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-10">
@@ -270,7 +276,7 @@ export default function CreateCarPage() {
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Production Year *</label>
-              <input type="number" {...register('year', { required: 'Year is required', valueAsNumber: true, min: { value: 1900, message: 'Invalid year' }, max: { value: new Date().getFullYear() + 2, message: 'Year too far ahead' } })} placeholder="2024" className={errors.year ? errorInputClass : inputClass} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('year', { required: 'Year is required', valueAsNumber: true, min: { value: 1900, message: 'Invalid year' }, max: { value: new Date().getFullYear() + 2, message: 'Year too far ahead' } })} placeholder="2024" className={errors.year ? errorInputClass : inputClass} />
               {errors.year && <p className="text-xs text-rose-400 font-medium mt-1">{errors.year.message}</p>}
             </div>
             <div className="space-y-2">
@@ -292,32 +298,32 @@ export default function CreateCarPage() {
           <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-3">
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Market Value ($) *</label>
-              <input type="number" {...register('price', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} className={errors.price ? errorInputClass : inputClass} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('price', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} className={errors.price ? errorInputClass : inputClass} />
               {errors.price && <p className="text-xs text-rose-400 font-medium mt-1">{errors.price.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Daily Rate ($) *</label>
-              <input type="number" {...register('pricePerDay', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Min $1' } })} className={errors.pricePerDay ? errorInputClass : `${inputClass} border-emerald-500/20`} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('pricePerDay', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Min $1' } })} className={errors.pricePerDay ? errorInputClass : `${inputClass} border-emerald-500/20`} />
               {errors.pricePerDay && <p className="text-xs text-rose-400 font-medium mt-1">{errors.pricePerDay.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Weekly Rate ($) *</label>
-              <input type="number" {...register('weeklyRate', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} className={errors.weeklyRate ? errorInputClass : inputClass} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('weeklyRate', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} className={errors.weeklyRate ? errorInputClass : inputClass} />
               {errors.weeklyRate && <p className="text-xs text-rose-400 font-medium mt-1">{errors.weeklyRate.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Monthly Rate ($) *</label>
-              <input type="number" {...register('monthlyRate', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} className={errors.monthlyRate ? errorInputClass : inputClass} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('monthlyRate', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} className={errors.monthlyRate ? errorInputClass : inputClass} />
               {errors.monthlyRate && <p className="text-xs text-rose-400 font-medium mt-1">{errors.monthlyRate.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Current Odometer *</label>
-              <input type="number" {...register('initialMileage', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} className={errors.initialMileage ? errorInputClass : inputClass} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('initialMileage', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Must be positive' } })} className={errors.initialMileage ? errorInputClass : inputClass} />
               {errors.initialMileage && <p className="text-xs text-rose-400 font-medium mt-1">{errors.initialMileage.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Service Tax (%) *</label>
-              <input type="number" {...register('tax', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Min 0%' }, max: { value: 100, message: 'Max 100%' } })} className={errors.tax ? errorInputClass : inputClass} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('tax', { required: 'Required', valueAsNumber: true, min: { value: 0, message: 'Min 0%' }, max: { value: 100, message: 'Max 100%' } })} className={errors.tax ? errorInputClass : inputClass} />
               {errors.tax && <p className="text-xs text-rose-400 font-medium mt-1">{errors.tax.message}</p>}
             </div>
           </div>
@@ -334,12 +340,12 @@ export default function CreateCarPage() {
           <div className="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-4">
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Capacity *</label>
-              <input type="number" {...register('passengers', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Min 1' }, max: { value: 50, message: 'Max 50' } })} placeholder="Seats" className={errors.passengers ? errorInputClass : inputClass} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('passengers', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Min 1' }, max: { value: 50, message: 'Max 50' } })} placeholder="Seats" className={errors.passengers ? errorInputClass : inputClass} />
               {errors.passengers && <p className="text-xs text-rose-400 font-medium mt-1">{errors.passengers.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Doors *</label>
-              <input type="number" {...register('doors', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Min 1' }, max: { value: 10, message: 'Max 10' } })} className={errors.doors ? errorInputClass : inputClass} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('doors', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Min 1' }, max: { value: 10, message: 'Max 10' } })} className={errors.doors ? errorInputClass : inputClass} />
               {errors.doors && <p className="text-xs text-rose-400 font-medium mt-1">{errors.doors.message}</p>}
             </div>
             <div className="space-y-2">
@@ -364,12 +370,12 @@ export default function CreateCarPage() {
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">HP / Max Power *</label>
-              <input type="number" {...register('maxPower', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Required' } })} className={errors.maxPower ? errorInputClass : inputClass} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('maxPower', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Required' } })} className={errors.maxPower ? errorInputClass : inputClass} />
               {errors.maxPower && <p className="text-xs text-rose-400 font-medium mt-1">{errors.maxPower.message}</p>}
             </div>
             <div className="space-y-2">
               <label className="block text-xs font-bold text-surface-400 uppercase tracking-wider">Top Speed (KM/H) *</label>
-              <input type="number" {...register('topSpeed', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Required' } })} className={errors.topSpeed ? errorInputClass : inputClass} />
+              <input type="number" onKeyDown={preventInvalidNumberInput} {...register('topSpeed', { required: 'Required', valueAsNumber: true, min: { value: 1, message: 'Required' } })} className={errors.topSpeed ? errorInputClass : inputClass} />
               {errors.topSpeed && <p className="text-xs text-rose-400 font-medium mt-1">{errors.topSpeed.message}</p>}
             </div>
           </div>
