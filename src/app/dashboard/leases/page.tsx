@@ -22,12 +22,16 @@ export default function LeasesPage() {
 
   const { searchQuery } = useSearch()
 
-  const filteredLeases = (getLeases.data?.data || []).filter((lease: any) => 
-    lease.car?.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    lease.car?.modelName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    lease.user?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    lease.user?.email?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredLeases = (getLeases.data?.data || []).filter((lease: any) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      (lease.car?.brand?.toLowerCase().includes(query)) ||
+      (lease.car?.modelName?.toLowerCase().includes(query)) ||
+      (lease.user?.name?.toLowerCase().includes(query)) ||
+      (lease.user?.email?.toLowerCase().includes(query))
+    );
+  })
 
   const deleteLease = useMutation({
     mutationFn: async (id: string) => {
