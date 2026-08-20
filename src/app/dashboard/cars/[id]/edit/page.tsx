@@ -52,10 +52,17 @@ interface CarFormValues {
 const urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!
 const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!
 
-export default function CreateCarPage() {
+import { useParams } from 'next/navigation'
+import { useEffect } from 'react'
+
+export default function EditCarPage() {
+  if (false) return <Loader2 />;
+
   const router = useRouter()
-  const { createCar } = useCars()
-  const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<CarFormValues>({
+  const params = useParams()
+  const { data: carData, isLoading } = useCars().getCarDetails(params.id as string)
+  const { updateCar } = useCars()
+  const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<CarFormValues>({
     defaultValues: {
       airCondition: false,
       fuelType: 'petrol',
@@ -76,6 +83,17 @@ export default function CreateCarPage() {
 
   // Image state — store File objects locally, upload on submit
   const [pendingImages, setPendingImages] = useState<File[]>([])
+  const [existingImages, setExistingImages] = useState<{url: string, fileId: string}[]>([])
+  const [existingBrandImage, setExistingBrandImage] = useState<{url: string, fileId: string} | null>(null)
+
+  useEffect(() => {
+    if (carData?.carDetails) {
+      reset(carData.carDetails);
+      setExistingImages(carData.carDetails.images || []);
+      if (carData.carDetails.brandImage?.url) setExistingBrandImage(carData.carDetails.brandImage);
+      setValue('brand', carData.carDetails.brand);
+    }
+  }, [carData, reset, setValue])
   const [pendingBrandImage, setPendingBrandImage] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [uploadProgress, setUploadProgress] = useState('')
@@ -99,6 +117,10 @@ export default function CreateCarPage() {
     if (file) setPendingBrandImage(file)
     e.target.value = ''
   }, [])
+
+  const removeExistingImage = (index: number) => {
+    setExistingImages(prev => prev.filter((_, i) => i !== index))
+  }
 
   const removeImage = (index: number) => {
     setPendingImages(prev => prev.filter((_, i) => i !== index))
@@ -134,7 +156,7 @@ export default function CreateCarPage() {
   }
 
   const onSubmit = async (data: CarFormValues) => {
-    if (pendingImages.length === 0) {
+    if (pendingImages.length === 0 && existingImages.length === 0) {
       toast.error('Please add at least one gallery image')
       return
     }
@@ -169,13 +191,16 @@ export default function CreateCarPage() {
       }
 
       // Step 3: Submit car data with image URLs to backend
-      setUploadProgress('Registering vehicle...')
-      createCar.mutate(
+      setUploadProgress('Updating vehicle...')
+      updateCar.mutate(
         {
-          ...data,
-          images: uploadedImages,
-          brandImage: uploadedBrandImage || { url: '', fileId: '' },
-          available: true,
+          id: params.id as string,
+          data: {
+            ...data,
+            images: [...existingImages, ...uploadedImages],
+            brandImage: uploadedBrandImage || { url: '', fileId: '' },
+            available: true,
+          }
         },
         {
           onSuccess: () => {
@@ -212,9 +237,9 @@ export default function CreateCarPage() {
         </Link>
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-surface-50">
-            Create Vehicle
+            Edit Vehicle
           </h2>
-          <p className="text-surface-400 font-medium">Add a new car to your rental fleet.</p>
+          <p className="text-surface-400 font-medium">Update vehicle details in your fleet.</p>
         </div>
       </div>
 
@@ -436,7 +461,20 @@ export default function CreateCarPage() {
                   onChange={handleGallerySelect}
                 />
               </div>
-              <div className="grid grid-cols-3 gap-4">
+              
+              {existingImages.length > 0 && (
+                <div className="grid grid-cols-3 gap-4 mb-4">
+                  {existingImages.map((img, i) => (
+                    <div key={'ex'+i} className="relative aspect-square group">
+                      <img src={img.url} alt="existing" className="h-full w-full object-cover rounded-xl border border-surface-800 shadow-sm transition-transform group-hover:scale-105" />
+                      <button type="button" onClick={() => removeExistingImage(i)} className="absolute -top-2 -right-2 bg-surface-900 rounded-full text-rose-500 p-1 shadow-lg border border-surface-800 hover:bg-rose-500 hover:text-white transition-colors">
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+<div className="grid grid-cols-3 gap-4">
                 {pendingImages.map((file, i) => (
                   <div key={i} className="relative aspect-square group">
                     <img src={URL.createObjectURL(file)} alt="preview" className="h-full w-full object-cover rounded-xl border border-surface-800 shadow-sm transition-transform group-hover:scale-105" />
@@ -467,12 +505,23 @@ export default function CreateCarPage() {
                   onChange={handleBrandImageSelect}
                 />
               </div>
-              {pendingBrandImage && (
+              
+              {existingBrandImage && !pendingBrandImage && (
+                <div className="relative inline-block mt-4 group">
+                  <div className="p-4 rounded-xl border border-surface-800 bg-surface-900/50 shadow-sm">
+                    <img src={existingBrandImage.url} alt="existing brand" className="h-24 w-24 object-contain" />
+                  </div>
+                  <button type="button" onClick={() => setExistingBrandImage(null)} className="absolute -top-2 -right-2 bg-surface-900 rounded-full text-rose-500 p-1 shadow-lg border border-surface-800 hover:bg-rose-500 hover:text-white transition-colors">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+{pendingBrandImage && (
                 <div className="relative inline-block mt-4 group">
                   <div className="p-4 rounded-xl border border-surface-800 bg-surface-900/50 shadow-sm">
                     <img src={URL.createObjectURL(pendingBrandImage)} alt="brand" className="h-24 w-24 object-contain" />
                   </div>
-                  <button type="button" onClick={() => setPendingBrandImage(null)} className="absolute -top-2 -right-2 bg-surface-900 rounded-full text-rose-500 p-1 shadow-lg border border-surface-800 hover:bg-rose-500 hover:text-white transition-colors">
+                  <button type="button" onClick={() => {setPendingBrandImage(null); setExistingBrandImage(null);}} className="absolute -top-2 -right-2 bg-surface-900 rounded-full text-rose-500 p-1 shadow-lg border border-surface-800 hover:bg-rose-500 hover:text-white transition-colors">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
@@ -485,11 +534,11 @@ export default function CreateCarPage() {
         <div className="flex justify-end pt-4">
           <button
             type="submit"
-            disabled={isSubmitting || createCar.isPending}
+            disabled={isSubmitting || updateCar.isPending}
             className="flex items-center justify-center gap-3 px-12 py-4 bg-brand-600 hover:bg-brand-700 text-white rounded-2xl text-sm font-bold shadow-xl shadow-brand-900/20 transition-all disabled:opacity-50"
           >
-            {(isSubmitting || createCar.isPending) && <Loader2 className="h-5 w-5 animate-spin" />}
-            {uploadProgress || 'Register Vehicle'}
+            {(isSubmitting || updateCar.isPending) && <Loader2 className="h-5 w-5 animate-spin" />}
+            {uploadProgress || 'Update Vehicle'}
           </button>
         </div>
       </form>

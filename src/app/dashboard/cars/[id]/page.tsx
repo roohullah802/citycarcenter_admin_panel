@@ -12,7 +12,8 @@ import {
   ChevronRight,
   Maximize2,
   X,
-  Images
+  Images,
+  Pencil
 } from 'lucide-react'
 import Link from 'next/link'
 import { DataTable } from '@/components/ui/DataTable'
@@ -116,16 +117,25 @@ export default function CarDetailsPage() {
   return (
     <div className="space-y-8 pb-10">
       {/* Top Navigation & Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/dashboard/cars" className="p-2.5 rounded-xl bg-surface-900 border border-surface-800 text-surface-400 hover:text-surface-100 transition-all">
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-        <div>
-          <h2 className="text-3xl font-bold tracking-tight text-surface-50 capitalize">
-            {carDetails.brand} {carDetails.modelName}
-          </h2>
-          <p className="text-surface-400 font-medium">{carDetails.year} Model{carDetails.color ? ` • ${carDetails.color}` : ''}</p>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link href="/dashboard/cars" className="p-2.5 rounded-xl bg-surface-900 border border-surface-800 text-surface-400 hover:text-surface-100 transition-all">
+            <ArrowLeft className="h-5 w-5" />
+          </Link>
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight text-surface-50 capitalize">
+              {carDetails.brand} {carDetails.modelName}
+            </h2>
+            <p className="text-surface-400 font-medium">{carDetails.year} Model{carDetails.color ? ` • ${carDetails.color}` : ''}</p>
+          </div>
         </div>
+        <Link
+          href={`/dashboard/cars/${carDetails._id}/edit`}
+          className="flex items-center gap-2 px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white rounded-xl transition-all font-bold text-sm shadow-lg shadow-brand-500/20"
+        >
+          <Pencil className="h-4 w-4" />
+          Edit Vehicle
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -230,6 +240,10 @@ export default function CarDetailsPage() {
                 <div className="space-y-1">
                   <dt className="text-[10px] font-bold text-surface-500 uppercase tracking-wider">Category</dt>
                   <dd className="text-sm font-bold text-surface-200 capitalize">{carDetails.category || 'Standard'}</dd>
+                </div>
+                <div className="space-y-1">
+                  <dt className="text-[10px] font-bold text-surface-500 uppercase tracking-wider">Service Tax</dt>
+                  <dd className="text-sm font-bold text-surface-200 capitalize">{carDetails.tax ? `${carDetails.tax}%` : 'None'}</dd>
                 </div>
               </div>
             </div>
